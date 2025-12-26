@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+:root {
+  --color-correct: #6aaa64;
+  --color-present: #c9b458;
+  --color-absent: #787c7e;
+  --color-invalid: #505050;
+  --color-key-bg: #d3d6da;
+  --color-key-bg-dark: #818384;
+}
+
+@keyframes flip {
+  0% { transform: rotateY(0); }
+  50% { transform: rotateY(-90deg); }
+  100% { transform: rotateY(0); }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+body {
+  background: white;
+  color: rgb(17 24 39);
+  transition: all 0.3s;
+}
+
+:root:has(.dark) body,
+.dark body {
+  background: rgb(17 24 39);
+  color: white;
+}
+
+.letter-tile {
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 2px solid rgb(209 213 219);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+
+.dark .letter-tile {
+  border-color: rgb(75 85 99);
+}
+
+.letter-tile.correct {
+  background: var(--color-correct);
+  border-color: var(--color-correct);
+  color: white;
+}
+
+.letter-tile.present {
+  background: var(--color-present);
+  border-color: var(--color-present);
+  color: white;
+}
+
+.letter-tile.absent {
+  background: var(--color-absent);
+  border-color: var(--color-absent);
+  color: white;
+}
+
+.letter-tile.empty {
+  background: white;
+}
+
+.dark .letter-tile.empty {
+  background: rgb(31 41 55);
+}
+
+.letter-tile.filled {
+  background: rgb(243 244 246);
+  border-color: rgb(107 114 128);
+}
+
+.dark .letter-tile.filled {
+  background: rgb(55 65 81);
+  border-color: rgb(156 163 175);
+}
+
+.key-button {
+  padding: 1rem 0.75rem;
+  background: var(--color-key-bg);
+  color: rgb(17 24 39);
+  font-weight: 600;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s;
+}
+
+.dark .key-button {
+  background: var(--color-key-bg-dark);
+  color: white;
+}
+
+.key-button:hover {
+  opacity: 0.8;
+}
+
+.key-button.correct {
+  background: var(--color-correct);
+  color: white;
+}
+
+.key-button.present {
+  background: var(--color-present);
+  color: white;
+}
+
+.key-button.absent {
+  background: var(--color-absent);
+  color: white;
+}
+
+.key-button.absent {
+  background: var(--color-absent);
+  color: white;
+}
+
+.key-button.wide {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.animate-flip {
+  animation: flip 0.6s ease-in-out;
+}
+
+.animate-pop {
+  animation: pop 0.1s ease-in-out;
+}
