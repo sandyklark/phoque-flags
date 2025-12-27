@@ -28,8 +28,13 @@ const patternEmojis: Record<FlagPattern, string> = {
   'solid': '■'
 };
 
-export const AttributeTile = ({ attribute, animationDelay = 0, isCurrentGuess = false }: AttributeTileProps) => {
+export const AttributeTile = ({ attribute, animationDelay = 0, isCurrentGuess = false, isFutureRow = false }: AttributeTileProps) => {
   const getStateClasses = () => {
+    // If it's a future row, make it grayed out regardless of state
+    if (isFutureRow) {
+      return 'bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500';
+    }
+
     switch (attribute.state) {
       case 'correct':
         return 'bg-green-500 text-white border-green-600';
@@ -80,7 +85,7 @@ export const AttributeTile = ({ attribute, animationDelay = 0, isCurrentGuess = 
   return (
     <div 
       className={`
-        attribute-tile w-20 h-20 flex flex-col items-center justify-center rounded-lg border-2 transition-all duration-300
+        attribute-tile w-16 h-16 flex flex-col items-center justify-center rounded-lg border-2 transition-all duration-300
         ${getStateClasses()} 
         ${isCurrentGuess ? 'animate-pulse' : ''}
       `}

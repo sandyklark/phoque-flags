@@ -1,7 +1,8 @@
 import { AttributeTile } from './AttributeTile';
-import type { GuessRowProps, FlagAttribute } from '../types/game';
+import { AttributeTileDropdown } from './AttributeTileDropdown';
+import type { GuessRowProps, FlagAttribute, FlagColor, FlagPattern } from '../types/game';
 
-export const GuessRow = ({ guess, isCurrentRow, currentGuess }: GuessRowProps) => {
+export const GuessRow = ({ guess, isCurrentRow, currentGuess, onColorSelect, onPatternSelect, onClearAttribute, isFutureRow = false }: GuessRowProps) => {
   const getDisplayAttributes = (): FlagAttribute[] => {
     if (isCurrentRow && !guess.isSubmitted && currentGuess) {
       return [
@@ -30,16 +31,51 @@ export const GuessRow = ({ guess, isCurrentRow, currentGuess }: GuessRowProps) =
     return guess.attributes;
   };
 
+  // If this is the current row (active input row), render clickable tile dropdowns
+  if (isCurrentRow && !guess.isSubmitted && currentGuess && onColorSelect && onPatternSelect && onClearAttribute) {
+    return (
+      <div className="flex gap-1 justify-center">
+        <AttributeTileDropdown
+          type="primaryColor"
+          value={currentGuess.primaryColor || null}
+          onChange={(color) => onColorSelect('primary', color as FlagColor)}
+          onClear={() => onClearAttribute('primaryColor')}
+        />
+        <AttributeTileDropdown
+          type="secondaryColor"
+          value={currentGuess.secondaryColor || null}
+          onChange={(color) => onColorSelect('secondary', color as FlagColor)}
+          onClear={() => onClearAttribute('secondaryColor')}
+        />
+        <AttributeTileDropdown
+          type="tertiaryColor"
+          value={currentGuess.tertiaryColor || null}
+          onChange={(color) => onColorSelect('tertiary', color as FlagColor)}
+          onClear={() => onClearAttribute('tertiaryColor')}
+          isOptional={true}
+        />
+        <AttributeTileDropdown
+          type="pattern"
+          value={currentGuess.pattern || null}
+          onChange={(pattern) => onPatternSelect(pattern as FlagPattern)}
+          onClear={() => onClearAttribute('pattern')}
+        />
+      </div>
+    );
+  }
+
+  // For submitted rows, render AttributeTiles as before
   const attributes = getDisplayAttributes();
 
   return (
-    <div className="flex gap-2 justify-center">
+    <div className="flex gap-1 justify-center">
       {attributes.map((attribute, index) => (
         <AttributeTile
           key={`${attribute.type}-${index}`}
           attribute={attribute}
           animationDelay={guess.isSubmitted ? index * 100 : 0}
-          isCurrentGuess={isCurrentRow && !guess.isSubmitted}
+          isCurrentGuess={false}
+          isFutureRow={isFutureRow}
         />
       ))}
     </div>

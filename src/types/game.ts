@@ -106,16 +106,27 @@ export interface GameBoardProps {
   guesses: FlagGuess[];
   currentGuess: Partial<Pick<Flag, 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern'>>;
   maxAttempts: number;
+  onColorSelect: (position: 'primary' | 'secondary' | 'tertiary', color: FlagColor) => void;
+  onPatternSelect: (pattern: FlagPattern) => void;
+  onClearAttribute: (attribute: 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern') => void;
+  onSubmitGuess: () => void;
+  canSubmit: boolean;
+  disabled: boolean;
 }
 
 export interface AttributeTileProps {
   attribute: FlagAttribute;
   animationDelay?: number;
   isCurrentGuess?: boolean;
+  isFutureRow?: boolean;
 }
 
 export interface GuessRowProps {
   guess: FlagGuess;
   isCurrentRow: boolean;
   currentGuess?: Partial<Pick<Flag, 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern'>>;
+  onColorSelect?: (position: 'primary' | 'secondary' | 'tertiary', color: FlagColor) => void;
+  onPatternSelect?: (pattern: FlagPattern) => void;
+  onClearAttribute?: (attribute: 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern') => void;
+  isFutureRow?: boolean;
 }

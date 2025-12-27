@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { GameBoard } from './GameBoard';
-import { FlagInputs } from './FlagInputs';
 import { GameModal } from './GameModal';
 import { GameStats } from './GameStats';
 import { isGuessComplete } from '../utils/flagHelpers';
@@ -17,6 +16,7 @@ export const Game = () => {
     stats,
     setColor,
     setPattern,
+    clearAttribute,
     submitGuess,
     resetGame,
     setTheme,
@@ -52,6 +52,13 @@ export const Game = () => {
       showNotification(result.error);
     } else if (result.success && result.message) {
       showNotification(result.message);
+    }
+  };
+
+  const handleClearAttribute = (attribute: 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern') => {
+    const result = clearAttribute(attribute);
+    if (!result.success && result.error) {
+      showNotification(result.error);
     }
   };
 
@@ -118,30 +125,21 @@ export const Game = () => {
         </div>
       )}
 
-      <main className="max-w-6xl mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Game Board */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold mb-4 text-center">Your Guesses</h2>
-            <GameBoard
-              guesses={guesses}
-              currentGuess={currentGuess}
-              maxAttempts={config.maxAttempts}
-            />
-          </div>
-
-          {/* Flag Inputs */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold mb-4 text-center">Make Your Guess</h2>
-            <FlagInputs
-              onColorSelect={handleColorSelect}
-              currentGuess={currentGuess}
-              disabled={isGameOver}
-              onPatternSelect={handlePatternSelect}
-              onSubmit={handleSubmitGuess}
-              canSubmit={canSubmit}
-            />
-          </div>
+      <main className="max-w-4xl mx-auto p-4">
+        {/* Single Column Game Board with Integrated Input */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold mb-4 text-center">Flagdle - Guess the Flag</h2>
+          <GameBoard
+            guesses={guesses}
+            currentGuess={currentGuess}
+            maxAttempts={config.maxAttempts}
+            onColorSelect={handleColorSelect}
+            onPatternSelect={handlePatternSelect}
+            onClearAttribute={handleClearAttribute}
+            onSubmitGuess={handleSubmitGuess}
+            canSubmit={canSubmit}
+            disabled={isGameOver}
+          />
         </div>
       </main>
 
