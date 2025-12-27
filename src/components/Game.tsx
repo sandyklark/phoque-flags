@@ -124,37 +124,41 @@ export const Game = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 shadow-sm">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
+        <div className="max-w-4xl mx-auto flex justify-between items-center flex-wrap gap-2">
           <button
             onClick={() => setShowStats(true)}
             className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            title="Statistics"
+            title="View game statistics"
+            aria-label="View game statistics"
           >
             📊 Stats
           </button>
 
-          <div className="flex flex-col items-center">
-            <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-              Flagdle {isDailyMode ? `#${puzzleNumber}` : ''}
+          <div className="flex flex-col items-center text-center flex-1 min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">
+              Phoque Flags {isDailyMode ? `#${puzzleNumber}` : ''}
             </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
               {isDailyMode ? 'Daily Flag Puzzle' : 'Practice Mode'} - Guess the flag by its colors and patterns
             </p>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-1 sm:gap-2 flex-shrink-0">
             <button
               onClick={handleNewGame}
-              className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="px-2 sm:px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
               title={isDailyMode ? "Start practice mode" : "New practice game"}
+              aria-label={isDailyMode ? "Start practice mode with random flag" : "Start new practice game"}
             >
-              🎮 {isDailyMode ? 'Practice' : 'New Game'}
+              <span className="hidden sm:inline">🎮 {isDailyMode ? 'Practice' : 'New Game'}</span>
+              <span className="sm:hidden">🎮</span>
             </button>
 
             <button
               onClick={toggleTheme}
-              className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title="Toggle theme"
+              className="px-2 sm:px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              title="Toggle dark/light theme"
+              aria-label={`Switch to ${config.theme === 'dark' ? 'light' : 'dark'} theme`}
             >
               {config.theme === 'dark' ? '☀️' : '🌙'}
             </button>
@@ -175,7 +179,7 @@ export const Game = () => {
           {/* Cute edge horse */}
           <div className="edge-horse"></div>
           
-          <h2 className="text-xl font-semibold mb-4 text-center">Flagdle - Guess the Flag</h2>
+          <h2 className="text-xl font-semibold mb-4 text-center">Phoque Flags - Guess the Flag</h2>
           
           <GameBoard
             guesses={guesses}

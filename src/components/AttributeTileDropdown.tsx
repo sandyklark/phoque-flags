@@ -157,6 +157,7 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
               onClick={() => handleSelection(color)}
               className="p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               title={color}
+              aria-label={`Select ${color} color`}
             >
               <div className={`w-8 h-8 rounded-full mx-auto ${colorStyles[color]} ${color === 'white' ? 'border border-gray-400' : ''}`} />
             </button>
@@ -171,6 +172,9 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
       {/* Clickable Tile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={`Select ${type.replace('Color', ' color').replace(/([A-Z])/g, ' $1').toLowerCase()}`}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
         className={`
           w-16 h-16 flex flex-col items-center justify-center rounded-lg border-2 transition-all duration-300
           ${value 

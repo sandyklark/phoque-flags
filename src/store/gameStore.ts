@@ -392,7 +392,10 @@ export const useGameStore = create<GameStore>()(
         const { config } = get();
         const newSolution = getRandomFlag();
 
-        console.log('New flag solution:', newSolution.name, newSolution.flagEmoji);
+        // Only log in development mode
+        if (process.env.NODE_ENV === 'development') {
+          console.log('New flag solution:', newSolution.name, newSolution.flagEmoji);
+        }
 
         set({
           gameState: 'playing',
@@ -481,7 +484,7 @@ export const useGameStore = create<GameStore>()(
       // Daily game actions
       loadDailyGame: () => {
         const todayString = getTodaysDateString();
-        const storedDaily = localStorage.getItem('flagdle-daily-game');
+        const storedDaily = localStorage.getItem('phoque-flags-daily-game');
 
         if (storedDaily) {
           try {
@@ -516,7 +519,10 @@ export const useGameStore = create<GameStore>()(
         const todaysFlag = getTodaysFlag();
         const puzzleNum = getPuzzleNumber();
 
-        console.log(`Daily Flagdle #${puzzleNum}:`, todaysFlag.name, todaysFlag.flagEmoji);
+        // Only log in development mode
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`Daily Phoque Flags #${puzzleNum}:`, todaysFlag.name, todaysFlag.flagEmoji);
+        }
 
         set({
           isDailyMode: true,
@@ -556,13 +562,16 @@ export const useGameStore = create<GameStore>()(
           gameState: state.gameState
         };
 
-        localStorage.setItem('flagdle-daily-game', JSON.stringify(dailyState));
+        localStorage.setItem('phoque-flags-daily-game', JSON.stringify(dailyState));
       },
 
       startTestMode: () => {
         // Switch to test mode with random flag
         const randomFlag = getRandomFlag();
-        console.log('Test mode:', randomFlag.name, randomFlag.flagEmoji);
+        // Only log in development mode  
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Test mode:', randomFlag.name, randomFlag.flagEmoji);
+        }
 
         set({
           isDailyMode: false,
@@ -588,7 +597,7 @@ export const useGameStore = create<GameStore>()(
         if (!state.isDailyMode) return;
 
         const todayString = getTodaysDateString();
-        const storedDaily = localStorage.getItem('flagdle-daily-game');
+        const storedDaily = localStorage.getItem('phoque-flags-daily-game');
 
         if (storedDaily) {
           try {
@@ -608,7 +617,7 @@ export const useGameStore = create<GameStore>()(
       },
     }),
     {
-      name: 'flagdle-game-store',
+      name: 'phoque-flags-game-store',
       partialize: (state) => ({
         stats: state.stats,
         config: state.config,

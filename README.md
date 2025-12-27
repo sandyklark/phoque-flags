@@ -1,6 +1,6 @@
-# 🏴 Flagdle
+# 🦭 Phoque Flags
 
-A daily flag guessing game inspired by Wordle. Guess the country flag by its colors and patterns!
+A daily flag guessing game inspired by Wordle. Guess the country flag by its colors and patterns with our adorable seal companion!
 
 ## 🎮 How to Play
 
@@ -108,4 +108,4 @@ This project is open source and available under the MIT License.
 
 ---
 
-Made with 🇺🇳 by the Flagdle team
+Made with 🦭 by the Phoque Flags team

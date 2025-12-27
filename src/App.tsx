@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Game } from './components/Game';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { useGameStore } from './store/gameStore';
 
 function App() {
@@ -10,7 +11,11 @@ function App() {
     setTheme(config.theme);
   }, [setTheme, config.theme]);
 
-  return <Game />;
+  return (
+    <ErrorBoundary>
+      <Game />
+    </ErrorBoundary>
+  );
 }
 
 export default App;

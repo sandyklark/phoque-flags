@@ -118,7 +118,8 @@ export const validateCountryCode = (countryCode: string): boolean => {
 // Function to get flag URL with fallback
 export const getFlagUrl = (countryCode: string, format: 'svg' | 'png' = 'svg'): string => {
   const code = countryCode.toLowerCase();
-  return `https://flagcdn.com/${code}.${format}`;
+  const cdnUrl = import.meta.env.VITE_FLAG_CDN_URL || 'https://flagcdn.com';
+  return `${cdnUrl}/${code}.${format}`;
 };
 
 // Get today's flag based on date (same for all players each day)

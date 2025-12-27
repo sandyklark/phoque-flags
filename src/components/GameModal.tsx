@@ -14,17 +14,28 @@ export const GameModal = ({
   if (!isOpen) return null;
 
   const handleShare = async () => {
-    const shareText = `Flagdle ${guessCount}/5\n\n${gameState === 'won' ? '🎯' : '❌'} ${solution.name} ${solution.flagEmoji}\n\nPlay at flagdle.com`;
+    const domain = window.location.hostname === 'localhost' ? 'phoqueflags.com' : window.location.host;
+    const shareText = `Phoque Flags ${guessCount}/5\n\n${gameState === 'won' ? '🎯' : '❌'} ${solution.name} ${solution.flagEmoji}\n\nPlay at https://${domain}`;
     
     if (navigator.share) {
       try {
-        await navigator.share({ text: shareText });
+        await navigator.share({ 
+          title: 'Phoque Flags - Daily Flag Game',
+          text: shareText,
+          url: `https://${domain}`
+        });
       } catch (error) {
-        // Fallback to clipboard
-        await navigator.clipboard.writeText(shareText);
+        // Fallback to clipboard if share fails
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareText);
+        }
       }
     } else if (navigator.clipboard) {
-      await navigator.clipboard.writeText(shareText);
+      try {
+        await navigator.clipboard.writeText(shareText);
+      } catch (error) {
+        console.error('Failed to copy to clipboard:', error);
+      }
     }
   };
 

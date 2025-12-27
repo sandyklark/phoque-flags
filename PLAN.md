@@ -1,12 +1,12 @@
-# Flagdle Project Status & Roadmap
+# Phoque Flags Project Status & Roadmap
 
-## 🎯 Current Status: **FULLY FUNCTIONAL FLAGDLE GAME**
+## 🎯 Current Status: **FULLY FUNCTIONAL PHOQUE FLAGS GAME**
 
-The Wordle clone has been successfully transformed into Flagdle - a flag guessing game! 
+The Wordle clone has been successfully transformed into Phoque Flags - a flag guessing game! 
 
 ## 🚀 What We Have Now
 
-**Flagdle** is a React/Zustand/Tailwind game where players guess country flags by their colors and patterns:
+**Phoque Flags** is a React/Zustand/Tailwind game where players guess country flags by their colors and patterns:
 - **Game Mechanics**: Guess flags using primary color, secondary color, optional tertiary color, and pattern type
 - **Feedback System**: Green (correct position), Yellow (color exists but wrong position), Gray (not in flag)
 - **25 Sample Flags**: Countries from all continents with detailed metadata
