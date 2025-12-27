@@ -67,42 +67,33 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
     setIsOpen(false);
   };
 
-  const getLabel = () => {
-    switch (type) {
-      case 'primaryColor': return '1st';
-      case 'secondaryColor': return '2nd';
-      case 'tertiaryColor': return '3rd';
-      case 'pattern': return 'Pattern';
-    }
-  };
 
   const getTileContent = () => {
     if (!value) {
       return (
-        <div className="text-xs opacity-60 text-center">
-          {getLabel()}
-          {isOptional && <div className="text-xs opacity-40">(optional)</div>}
+        <div className="flex items-center justify-center w-full h-full">
+          <div className="w-8 h-8 rounded border-2 border-dashed border-gray-400 dark:border-gray-500 flex items-center justify-center">
+            <span className="text-xs text-gray-400">?</span>
+          </div>
         </div>
       );
     }
 
     if (isPattern) {
       return (
-        <div className="flex flex-col items-center">
-          <span className="text-lg">{patternInfo[value as FlagPattern].emoji}</span>
-          <span className="text-xs opacity-80 capitalize">{(value as string).replace('-', ' ')}</span>
+        <div className="flex items-center justify-center w-full h-full">
+          <span className="text-2xl">{patternInfo[value as FlagPattern].emoji}</span>
         </div>
       );
     } else {
       // Color attribute
       return (
-        <div className="flex flex-col items-center space-y-1">
+        <div className="flex items-center justify-center w-full h-full">
           <div 
-            className={`w-6 h-6 rounded-full ${colorStyles[value as FlagColor]} ${
+            className={`w-8 h-8 rounded-full ${colorStyles[value as FlagColor]} ${
               value === 'white' ? 'border border-gray-400' : ''
             }`}
           />
-          <span className="text-xs opacity-80 capitalize">{value}</span>
         </div>
       );
     }
@@ -132,7 +123,7 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
       );
     } else {
       return (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-5 sm:grid-cols-6 gap-1">
           {/* None option for optional fields */}
           {isOptional && (
             <button
@@ -150,10 +141,10 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
             <button
               key={color}
               onClick={() => handleSelection(color)}
-              className="flex flex-col items-center p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              title={color}
             >
-              <div className={`w-6 h-6 rounded-full ${colorStyles[color]} ${color === 'white' ? 'border border-gray-400' : ''}`} />
-              <span className="text-xs mt-1 capitalize">{color}</span>
+              <div className={`w-8 h-8 rounded-full mx-auto ${colorStyles[color]} ${color === 'white' ? 'border border-gray-400' : ''}`} />
             </button>
           ))}
         </div>
@@ -184,7 +175,8 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
         <div className={`
           absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 
           rounded-lg shadow-lg z-50 p-2 max-h-64 overflow-y-auto
-          ${isPattern ? 'w-72' : 'w-64'}
+          ${isPattern ? 'w-72 sm:w-72' : 'w-64 sm:w-64'}
+          max-w-[calc(100vw-2rem)]
         `}>
           {getDropdownContent()}
         </div>

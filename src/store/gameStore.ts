@@ -66,6 +66,49 @@ const updateCurrentRowWithGuess = (
   return newGuesses;
 };
 
+const getRegionHint = (flag: Flag): string | null => {
+  const regions: Record<string, Record<string, string[]>> = {
+    'Europe': {
+      'Northern Europe': ['United Kingdom', 'Ireland', 'Norway', 'Sweden', 'Denmark', 'Finland'],
+      'Western Europe': ['France', 'Germany', 'Netherlands', 'Belgium', 'Switzerland'],
+      'Southern Europe': ['Spain', 'Italy', 'Greece', 'Portugal'],
+      'Eastern Europe': ['Russia', 'Poland', 'Ukraine']
+    },
+    'Asia': {
+      'East Asia': ['China', 'Japan', 'South Korea'],
+      'Southeast Asia': ['Thailand', 'Vietnam', 'Indonesia', 'Philippines'],
+      'South Asia': ['India', 'Pakistan', 'Bangladesh'],
+      'Western Asia': ['Turkey', 'Iran', 'Israel']
+    },
+    'Africa': {
+      'North Africa': ['Egypt', 'Morocco', 'Algeria', 'Tunisia'],
+      'West Africa': ['Nigeria', 'Ghana', 'Senegal'],
+      'East Africa': ['Kenya', 'Ethiopia', 'Tanzania'],
+      'Southern Africa': ['South Africa', 'Zimbabwe']
+    },
+    'North America': {
+      'North America': ['United States', 'Canada', 'Mexico']
+    },
+    'South America': {
+      'South America': ['Brazil', 'Argentina', 'Chile', 'Peru', 'Colombia']
+    },
+    'Oceania': {
+      'Oceania': ['Australia', 'New Zealand']
+    }
+  };
+
+  const continent = regions[flag.continent];
+  if (!continent) return null;
+
+  for (const [region, countries] of Object.entries(continent)) {
+    if (countries.includes(flag.name)) {
+      return `This flag is from ${region}`;
+    }
+  }
+  
+  return null;
+};
+
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
@@ -78,6 +121,14 @@ export const useGameStore = create<GameStore>()(
       config: defaultConfig,
       stats: defaultStats,
       inputState: {},
+      hintState: {
+        hintsUsed: 0,
+        maxHints: 3,
+        hintHistory: [],
+        autoHintsTriggered: [],
+        showModal: false,
+        latestHint: null
+      },
 
       // Actions
       setColor: (position: 'primary' | 'secondary' | 'tertiary', color: FlagColor): GameActionResult => {
@@ -195,7 +246,112 @@ export const useGameStore = create<GameStore>()(
           get().updateStats(isCorrect, currentRow + 1);
         }
 
+        // Auto-trigger hints based on current row if game is still playing
+        if (!isCorrect && !isGameOver) {
+          get().autoTriggerHints(currentRow + 1);
+        }
+
         return createSuccess(isCorrect ? 'Correct! You found the flag!' : 'Good guess!');
+      },
+
+      getHint: (): GameActionResult & { hint?: string } => {
+        const { gameState, hintState, solution } = get();
+        
+        if (gameState !== 'playing') {
+          return createError(GAME_ERRORS.GAME_NOT_ACTIVE);
+        }
+        
+        if (hintState.hintsUsed >= hintState.maxHints) {
+          return createError('No more hints available');
+        }
+        
+        const nextHintIndex = hintState.hintsUsed;
+        let hint = '';
+        
+        switch (nextHintIndex) {
+          case 0:
+            hint = `This flag is from ${solution.continent}`;
+            break;
+          case 1:
+            // Add region hints based on continent
+            const regionHint = getRegionHint(solution);
+            hint = regionHint || `This flag is from ${solution.continent}`;
+            break;
+          case 2:
+            hint = `The country name starts with "${solution.name.charAt(0)}"`;
+            break;
+          default:
+            return createError('No more hints available');
+        }
+        
+        set({
+          hintState: {
+            ...hintState,
+            hintsUsed: hintState.hintsUsed + 1,
+            hintHistory: [...hintState.hintHistory, hint],
+            showModal: true,
+            latestHint: hint
+          }
+        });
+        
+        return { success: true, hint };
+      },
+
+      autoTriggerHints: (currentRow: number) => {
+        const { hintState, solution } = get();
+        
+        // Define thresholds: after 2nd, 4th, and 5th failed guesses
+        const thresholds = [2, 4, 5];
+        const currentThreshold = currentRow;
+        
+        // Check if we should trigger a hint at this threshold
+        for (let i = 0; i < thresholds.length; i++) {
+          const threshold = thresholds[i];
+          if (currentThreshold >= threshold && !hintState.autoHintsTriggered.includes(threshold)) {
+            // Trigger hint if we haven't already triggered it and we haven't exceeded max hints
+            if (hintState.hintsUsed < hintState.maxHints) {
+              let hint = '';
+              const hintIndex = hintState.hintsUsed;
+              
+              switch (hintIndex) {
+                case 0:
+                  hint = `This flag is from ${solution.continent}`;
+                  break;
+                case 1:
+                  const regionHint = getRegionHint(solution);
+                  hint = regionHint || `This flag is from ${solution.continent}`;
+                  break;
+                case 2:
+                  hint = `The country name starts with "${solution.name.charAt(0)}"`;
+                  break;
+              }
+              
+              if (hint) {
+                set({
+                  hintState: {
+                    ...hintState,
+                    hintsUsed: hintState.hintsUsed + 1,
+                    hintHistory: [...hintState.hintHistory, hint],
+                    autoHintsTriggered: [...hintState.autoHintsTriggered, threshold],
+                    showModal: true,
+                    latestHint: hint
+                  }
+                });
+              }
+            }
+          }
+        }
+      },
+
+      closeHintModal: () => {
+        const { hintState } = get();
+        set({
+          hintState: {
+            ...hintState,
+            showModal: false,
+            latestHint: null
+          }
+        });
       },
 
       resetGame: () => {
@@ -211,6 +367,14 @@ export const useGameStore = create<GameStore>()(
           currentGuess: {},
           currentRow: 0,
           inputState: {},
+          hintState: {
+            hintsUsed: 0,
+            maxHints: 3,
+            hintHistory: [],
+            autoHintsTriggered: [],
+            showModal: false,
+            latestHint: null
+          },
         });
       },
 

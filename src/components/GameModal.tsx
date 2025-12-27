@@ -7,6 +7,7 @@ export const GameModal = ({
   solution, 
   guessCount, 
   stats, 
+  hintState,
   onNewGame 
 }: GameModalProps) => {
   if (!isOpen) return null;
@@ -54,13 +55,27 @@ export const GameModal = ({
           </div>
 
           {gameState === 'won' ? (
-            <p className="mb-4 text-green-600 dark:text-green-400 font-semibold">
-              You guessed the flag in {guessCount} {guessCount === 1 ? 'try' : 'tries'}!
-            </p>
+            <div className="mb-4">
+              <p className="text-green-600 dark:text-green-400 font-semibold">
+                You guessed the flag in {guessCount} {guessCount === 1 ? 'try' : 'tries'}!
+              </p>
+              {hintState.hintsUsed > 0 && (
+                <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
+                  💡 {hintState.hintsUsed} hint{hintState.hintsUsed === 1 ? '' : 's'} used
+                </p>
+              )}
+            </div>
           ) : (
-            <p className="mb-4 text-red-600 dark:text-red-400">
-              Don't worry, flags can be tricky!
-            </p>
+            <div className="mb-4">
+              <p className="text-red-600 dark:text-red-400">
+                Don't worry, flags can be tricky!
+              </p>
+              {hintState.hintsUsed > 0 && (
+                <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
+                  💡 {hintState.hintsUsed} hint{hintState.hintsUsed === 1 ? '' : 's'} used
+                </p>
+              )}
+            </div>
           )}
 
           <div className="border-t border-b py-4 my-4">

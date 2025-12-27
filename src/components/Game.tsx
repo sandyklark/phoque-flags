@@ -3,6 +3,8 @@ import { useGameStore } from '../store/gameStore';
 import { GameBoard } from './GameBoard';
 import { GameModal } from './GameModal';
 import { GameStats } from './GameStats';
+import { HintButton } from './HintButton';
+import { HintModal } from './HintModal';
 import { isGuessComplete } from '../utils/flagHelpers';
 
 export const Game = () => {
@@ -20,6 +22,8 @@ export const Game = () => {
     submitGuess,
     resetGame,
     setTheme,
+    hintState,
+    closeHintModal,
   } = useGameStore();
 
   const [showModal, setShowModal] = useState(false);
@@ -129,6 +133,7 @@ export const Game = () => {
         {/* Single Column Game Board with Integrated Input */}
         <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold mb-4 text-center">Flagdle - Guess the Flag</h2>
+          
           <GameBoard
             guesses={guesses}
             currentGuess={currentGuess}
@@ -140,6 +145,11 @@ export const Game = () => {
             canSubmit={canSubmit}
             disabled={isGameOver}
           />
+          
+          {/* Manual Hint Button */}
+          <div className="flex justify-center mt-4">
+            <HintButton />
+          </div>
         </div>
       </main>
 
@@ -151,6 +161,7 @@ export const Game = () => {
         solution={solution}
         guessCount={currentRow}
         stats={stats}
+        hintState={hintState}
         onNewGame={handleNewGame}
       />
 
@@ -158,6 +169,12 @@ export const Game = () => {
         stats={stats}
         isOpen={showStats}
         onClose={() => setShowStats(false)}
+      />
+
+      <HintModal
+        isOpen={hintState.showModal}
+        onClose={closeHintModal}
+        newHint={hintState.latestHint || undefined}
       />
     </div>
   );

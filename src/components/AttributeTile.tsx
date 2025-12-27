@@ -62,21 +62,19 @@ export const AttributeTile = ({ attribute, animationDelay = 0, isCurrentGuess = 
 
     if (attribute.type === 'pattern') {
       return (
-        <div className="flex flex-col items-center">
-          <span className="text-lg">{patternEmojis[attribute.value as FlagPattern]}</span>
-          <span className="text-xs opacity-80 capitalize">{(attribute.value as string).replace('-', ' ')}</span>
+        <div className="flex items-center justify-center w-full h-full">
+          <span className="text-2xl">{patternEmojis[attribute.value as FlagPattern]}</span>
         </div>
       );
     } else {
       // Color attribute
       return (
-        <div className="flex flex-col items-center space-y-1">
+        <div className="flex items-center justify-center w-full h-full">
           <div 
-            className={`w-6 h-6 rounded-full ${colorStyles[attribute.value as FlagColor]} ${
+            className={`w-8 h-8 rounded-full ${colorStyles[attribute.value as FlagColor]} ${
               attribute.value === 'white' ? 'border border-gray-400' : ''
             }`}
           />
-          <span className="text-xs opacity-80 capitalize">{attribute.value}</span>
         </div>
       );
     }

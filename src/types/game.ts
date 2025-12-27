@@ -52,6 +52,15 @@ export interface Flag {
 
 export type GameState = 'playing' | 'won' | 'lost' | 'loading';
 
+export interface HintState {
+  hintsUsed: number;
+  maxHints: number;
+  hintHistory: string[];
+  autoHintsTriggered: number[];
+  showModal: boolean;
+  latestHint: string | null;
+}
+
 export interface GameStore {
   // Game state
   gameState: GameState;
@@ -69,11 +78,17 @@ export interface GameStore {
   // Input state
   inputState: Record<string, AttributeState>;
   
+  // Hint state
+  hintState: HintState;
+  
   // Actions
   setColor: (position: 'primary' | 'secondary' | 'tertiary', color: FlagColor) => GameActionResult;
   setPattern: (pattern: FlagPattern) => GameActionResult;
   clearAttribute: (attribute: 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern') => GameActionResult;
   submitGuess: () => GameActionResult;
+  getHint: () => GameActionResult & { hint?: string };
+  autoTriggerHints: (currentRow: number) => void;
+  closeHintModal: () => void;
   resetGame: () => void;
   loadConfig: (config: Partial<GameConfig>) => void;
   updateStats: (won: boolean, guessCount: number) => void;
@@ -87,6 +102,7 @@ export interface GameModalProps {
   solution: Flag;
   guessCount: number;
   stats: GameStats;
+  hintState: HintState;
   onNewGame: () => void;
 }
 
