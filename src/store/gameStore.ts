@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { GameStore, GameConfig, GameStats, FlagGuess, Flag, FlagColor, FlagPattern } from '../types/game';
+import type { GameStore, GameConfig, GameStats, FlagGuess, Flag, FlagColor, FlagPattern, DailyGameState } from '../types/game';
 import type { GameActionResult } from '../utils/gameErrors';
 import gameConfig from '../config/game.config.json';
-import { getRandomFlag, createEmptyFlagGuess, isGuessComplete, checkFlagAttributes, isCorrectGuess, formatGuessForSubmission } from '../utils/flagHelpers';
+import { getRandomFlag, createEmptyFlagGuess, isGuessComplete, checkFlagAttributes, isCorrectGuess, formatGuessForSubmission, getTodaysFlag, getPuzzleNumber, getTodaysDateString } from '../utils/flagHelpers';
 import { GAME_ERRORS, createSuccess, createError } from '../utils/gameErrors';
 
 const defaultConfig: GameConfig = {
@@ -137,6 +137,10 @@ export const useGameStore = create<GameStore>()(
         showModal: false,
         latestHint: null
       },
+      
+      // Daily game state
+      isDailyMode: true,
+      puzzleNumber: getPuzzleNumber(),
 
       // Actions
       setColor: (position: 'primary' | 'secondary' | 'tertiary', color: FlagColor): GameActionResult => {
@@ -257,6 +261,11 @@ export const useGameStore = create<GameStore>()(
         // Auto-trigger hints based on current row if game is still playing
         if (!isCorrect && !isGameOver) {
           get().autoTriggerHints(currentRow + 1);
+        }
+
+        // Save daily progress after each guess
+        if (get().isDailyMode) {
+          get().saveDailyProgress();
         }
 
         return createSuccess(isCorrect ? 'Correct! You found the flag!' : 'Good guess!');
@@ -396,6 +405,25 @@ export const useGameStore = create<GameStore>()(
         });
       },
 
+      reloadConfigFromFile: () => {
+        // Force reload config from the JSON file
+        const freshConfig = {
+          maxAttempts: gameConfig.maxAttempts,
+          animationSpeed: gameConfig.animationSpeed,
+          hardMode: gameConfig.hardMode,
+          theme: gameConfig.theme as 'light' | 'dark' | 'auto',
+          difficulty: gameConfig.difficulty as 'easy' | 'medium' | 'hard',
+        };
+
+        set({
+          config: freshConfig,
+          guesses: createEmptyGuesses(freshConfig.maxAttempts),
+        });
+        
+        // Also reset the game to apply the new config
+        get().resetGame();
+      },
+
       updateStats: (won: boolean, guessCount: number) => {
         const { stats } = get();
         const newStats: GameStats = {
@@ -432,6 +460,135 @@ export const useGameStore = create<GameStore>()(
           }
         }
       },
+
+      // Daily game actions
+      loadDailyGame: () => {
+        const todayString = getTodaysDateString();
+        const storedDaily = localStorage.getItem('flagdle-daily-game');
+        
+        if (storedDaily) {
+          try {
+            const dailyState: DailyGameState = JSON.parse(storedDaily);
+            
+            // Check if it's the same day
+            if (dailyState.date === todayString) {
+              // Restore today's progress
+              set({
+                isDailyMode: true,
+                puzzleNumber: dailyState.puzzleNumber,
+                solution: { id: dailyState.flagId } as Flag,
+                guesses: dailyState.guesses,
+                currentRow: dailyState.currentRow,
+                hintState: dailyState.hintState,
+                gameState: dailyState.gameState,
+                inputState: {},
+                currentGuess: {}
+              });
+              
+              // Load the full flag data
+              const todaysFlag = getTodaysFlag();
+              set({ solution: todaysFlag });
+              return;
+            }
+          } catch (error) {
+            console.warn('Failed to load daily game state:', error);
+          }
+        }
+        
+        // Start fresh daily game
+        const todaysFlag = getTodaysFlag();
+        const puzzleNum = getPuzzleNumber();
+        
+        console.log(`Daily Flagdle #${puzzleNum}:`, todaysFlag.name, todaysFlag.flagEmoji);
+        
+        set({
+          isDailyMode: true,
+          puzzleNumber: puzzleNum,
+          gameState: 'playing',
+          solution: todaysFlag,
+          guesses: createEmptyGuesses(get().config.maxAttempts),
+          currentGuess: {},
+          currentRow: 0,
+          inputState: {},
+          hintState: {
+            hintsUsed: 0,
+            maxHints: 3,
+            hintHistory: [],
+            autoHintsTriggered: [],
+            showModal: false,
+            latestHint: null
+          }
+        });
+        
+        // Save initial daily state
+        get().saveDailyProgress();
+      },
+
+      saveDailyProgress: () => {
+        const state = get();
+        if (!state.isDailyMode) return;
+        
+        const dailyState: DailyGameState = {
+          date: getTodaysDateString(),
+          puzzleNumber: state.puzzleNumber,
+          flagId: state.solution.id,
+          completed: state.gameState === 'won' || state.gameState === 'lost',
+          guesses: state.guesses,
+          currentRow: state.currentRow,
+          hintState: state.hintState,
+          gameState: state.gameState
+        };
+        
+        localStorage.setItem('flagdle-daily-game', JSON.stringify(dailyState));
+      },
+
+      startTestMode: () => {
+        // Switch to test mode with random flag
+        const randomFlag = getRandomFlag();
+        console.log('Test mode:', randomFlag.name, randomFlag.flagEmoji);
+        
+        set({
+          isDailyMode: false,
+          gameState: 'playing',
+          solution: randomFlag,
+          guesses: createEmptyGuesses(get().config.maxAttempts),
+          currentGuess: {},
+          currentRow: 0,
+          inputState: {},
+          hintState: {
+            hintsUsed: 0,
+            maxHints: 3,
+            hintHistory: [],
+            autoHintsTriggered: [],
+            showModal: false,
+            latestHint: null
+          }
+        });
+      },
+
+      checkForNewDay: () => {
+        const state = get();
+        if (!state.isDailyMode) return;
+        
+        const todayString = getTodaysDateString();
+        const storedDaily = localStorage.getItem('flagdle-daily-game');
+        
+        if (storedDaily) {
+          try {
+            const dailyState: DailyGameState = JSON.parse(storedDaily);
+            if (dailyState.date !== todayString) {
+              // New day! Load fresh daily puzzle
+              get().loadDailyGame();
+            }
+          } catch (error) {
+            // If error parsing, just load daily game
+            get().loadDailyGame();
+          }
+        } else {
+          // No stored daily game, load fresh
+          get().loadDailyGame();
+        }
+      },
     }),
     {
       name: 'flagdle-game-store',
@@ -443,10 +600,14 @@ export const useGameStore = create<GameStore>()(
   )
 );
 
-// Initialize game on store creation - ensure fresh game state
+// Initialize game on store creation - load daily puzzle or restore progress
 const initializeGame = () => {
-  useGameStore.getState().resetGame();
-  useGameStore.setState({ gameState: 'playing' });
+  const store = useGameStore.getState();
+  // Force reload config from file to get latest values
+  store.reloadConfigFromFile();
+  
+  // Load today's daily puzzle or restore progress
+  store.loadDailyGame();
 };
 
 initializeGame();

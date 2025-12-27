@@ -16,14 +16,17 @@ export const Game = () => {
     currentRow,
     config,
     stats,
+    isDailyMode,
+    puzzleNumber,
     setColor,
     setPattern,
     clearAttribute,
     submitGuess,
-    resetGame,
+    startTestMode,
     setTheme,
     hintState,
     closeHintModal,
+    checkForNewDay,
   } = useGameStore();
 
   const [showModal, setShowModal] = useState(false);
@@ -35,6 +38,27 @@ export const Game = () => {
       setShowModal(true);
     }
   }, [gameState]);
+
+  // Check for new day when page becomes visible
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        checkForNewDay();
+      }
+    };
+
+    const handleFocus = () => {
+      checkForNewDay();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [checkForNewDay]);
 
   const handleColorSelect = (position: 'primary' | 'secondary' | 'tertiary', color: any) => {
     const result = setColor(position, color);
@@ -72,7 +96,7 @@ export const Game = () => {
   };
 
   const handleNewGame = () => {
-    resetGame();
+    startTestMode();
     setShowModal(false);
   };
 
@@ -98,17 +122,21 @@ export const Game = () => {
           </button>
 
           <div className="flex flex-col items-center">
-            <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400">Flagdle</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Guess the flag by its colors and patterns</p>
+            <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              Flagdle {isDailyMode ? `#${puzzleNumber}` : ''}
+            </h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {isDailyMode ? 'Daily Flag Puzzle' : 'Practice Mode'} - Guess the flag by its colors and patterns
+            </p>
           </div>
 
           <div className="flex gap-2">
             <button
               onClick={handleNewGame}
               className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title="New game"
+              title={isDailyMode ? "Start practice mode" : "New practice game"}
             >
-              🎮 New Game
+              🎮 {isDailyMode ? 'Practice' : 'New Game'}
             </button>
 
             <button

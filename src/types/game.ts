@@ -20,7 +20,7 @@ export interface GameStats {
   guessDistribution: Record<number, number>;
 }
 
-export type FlagColor = 'red' | 'blue' | 'white' | 'green' | 'yellow' | 'black' | 'orange' | 'purple' | 'pink' | 'brown' | 'gray';
+export type FlagColor = 'red' | 'blue' | 'white' | 'green' | 'yellow' | 'black' | 'orange';
 export type FlagPattern = 'stripes' | 'horizontal-stripes' | 'vertical-stripes' | 'cross' | 'circle' | 'stars' | 'symbol' | 'diamond' | 'triangle' | 'complex' | 'solid' | 'diagonal';
 export type AttributeState = 'correct' | 'present' | 'absent' | 'empty' | 'filled';
 
@@ -61,6 +61,17 @@ export interface HintState {
   latestHint: string | null;
 }
 
+export interface DailyGameState {
+  date: string;           // 'YYYY-MM-DD'
+  puzzleNumber: number;   // Days since launch
+  flagId: string;         // Today's flag ID
+  completed: boolean;
+  guesses: FlagGuess[];
+  currentRow: number;
+  hintState: HintState;
+  gameState: GameState;
+}
+
 export interface GameStore {
   // Game state
   gameState: GameState;
@@ -81,6 +92,10 @@ export interface GameStore {
   // Hint state
   hintState: HintState;
   
+  // Daily game state
+  isDailyMode: boolean;
+  puzzleNumber: number;
+  
   // Actions
   setColor: (position: 'primary' | 'secondary' | 'tertiary', color: FlagColor) => GameActionResult;
   setPattern: (pattern: FlagPattern) => GameActionResult;
@@ -91,8 +106,15 @@ export interface GameStore {
   closeHintModal: () => void;
   resetGame: () => void;
   loadConfig: (config: Partial<GameConfig>) => void;
+  reloadConfigFromFile: () => void;
   updateStats: (won: boolean, guessCount: number) => void;
   setTheme: (theme: 'light' | 'dark' | 'auto') => void;
+  
+  // Daily game actions
+  loadDailyGame: () => void;
+  saveDailyProgress: () => void;
+  startTestMode: () => void;
+  checkForNewDay: () => void;
 }
 
 export interface GameModalProps {

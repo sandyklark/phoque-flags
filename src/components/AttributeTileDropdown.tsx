@@ -23,11 +23,7 @@ const colorStyles: Record<FlagColor, string> = {
   green: 'bg-green-500',
   yellow: 'bg-yellow-400',
   black: 'bg-black',
-  orange: 'bg-orange-500',
-  purple: 'bg-purple-500',
-  pink: 'bg-pink-500',
-  brown: 'bg-amber-800',
-  gray: 'bg-gray-500'
+  orange: 'bg-orange-500'
 };
 
 const patternInfo: Record<FlagPattern, { icon: React.ComponentType<any>; description: string }> = {

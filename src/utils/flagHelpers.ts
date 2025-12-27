@@ -120,3 +120,25 @@ export const getFlagUrl = (countryCode: string, format: 'svg' | 'png' = 'svg'): 
   const code = countryCode.toLowerCase();
   return `https://flagcdn.com/${code}.${format}`;
 };
+
+// Get today's flag based on date (same for all players each day)
+export const getTodaysFlag = (): Flag => {
+  const flags = getAllFlags();
+  const today = new Date();
+  const startDate = new Date('2025-01-01'); // Game launch date
+  const daysSinceStart = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  const flagIndex = Math.abs(daysSinceStart) % flags.length;
+  return flags[flagIndex];
+};
+
+// Get current puzzle number (days since launch)
+export const getPuzzleNumber = (): number => {
+  const today = new Date();
+  const startDate = new Date('2025-01-01');
+  return Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+};
+
+// Get today's date string for storage
+export const getTodaysDateString = (): string => {
+  return new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
+};
