@@ -1,5 +1,4 @@
 import type { GameModalProps } from '../types/game';
-import { getShareText } from '../utils/gameHelpers';
 
 export const GameModal = ({ 
   isOpen, 
@@ -13,7 +12,7 @@ export const GameModal = ({
   if (!isOpen) return null;
 
   const handleShare = async () => {
-    const shareText = getShareText([], gameState === 'won');
+    const shareText = `Flagdle ${guessCount}/6\n\n${gameState === 'won' ? '🎯' : '❌'} ${solution.name} ${solution.flagEmoji}\n\nPlay at flagdle.com`;
     
     if (navigator.share) {
       try {
@@ -33,19 +32,34 @@ export const GameModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-lg w-full">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">
             {gameState === 'won' ? '🎉 Congratulations!' : '😔 Better luck next time!'}
           </h2>
           
+          {/* Flag Display */}
+          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="text-6xl mb-2">{solution.flagEmoji}</div>
+            <h3 className="text-xl font-bold mb-2">{solution.name}</h3>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              <p><strong>Continent:</strong> {solution.continent}</p>
+              <p><strong>Primary Color:</strong> {solution.primaryColor}</p>
+              <p><strong>Secondary Color:</strong> {solution.secondaryColor}</p>
+              {solution.tertiaryColor && (
+                <p><strong>Tertiary Color:</strong> {solution.tertiaryColor}</p>
+              )}
+              <p><strong>Pattern:</strong> {solution.pattern.replace('-', ' ')}</p>
+            </div>
+          </div>
+
           {gameState === 'won' ? (
-            <p className="mb-4">
-              You guessed the word <strong>{solution}</strong> in {guessCount} {guessCount === 1 ? 'try' : 'tries'}!
+            <p className="mb-4 text-green-600 dark:text-green-400 font-semibold">
+              You guessed the flag in {guessCount} {guessCount === 1 ? 'try' : 'tries'}!
             </p>
           ) : (
-            <p className="mb-4">
-              The word was <strong>{solution}</strong>
+            <p className="mb-4 text-red-600 dark:text-red-400">
+              Don't worry, flags can be tricky!
             </p>
           )}
 
@@ -74,19 +88,19 @@ export const GameModal = ({
           <div className="flex gap-2 justify-center">
             <button
               onClick={handleShare}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
             >
               Share
             </button>
             <button
               onClick={onNewGame}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               New Game
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
             >
               Close
             </button>

@@ -1,24 +1,9 @@
 {
-  "wordLength": 5,
   "maxAttempts": 6,
   "animationSpeed": 300,
   "hardMode": false,
-  "allowDuplicateLetters": true,
   "theme": "auto",
-  "difficulty": {
-    "easy": {
-      "wordLength": 4,
-      "maxAttempts": 8
-    },
-    "normal": {
-      "wordLength": 5,
-      "maxAttempts": 6
-    },
-    "hard": {
-      "wordLength": 6,
-      "maxAttempts": 5
-    }
-  },
+  "difficulty": "medium",
   "ui": {
     "showHints": true,
     "enableAnimations": true,

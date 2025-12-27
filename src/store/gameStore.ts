@@ -1,18 +1,17 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { GameStore, GameConfig, GameStats, Guess, LetterState } from '../types/game';
+import type { GameStore, GameConfig, GameStats, FlagGuess, Flag, FlagColor, FlagPattern } from '../types/game';
 import type { GameActionResult } from '../utils/gameErrors';
 import gameConfig from '../config/game.config.json';
-import { getRandomSolution, isValidWord, checkLetterStates } from '../utils/gameHelpers';
+import { getRandomFlag, createEmptyFlagGuess, isGuessComplete, checkFlagAttributes, isCorrectGuess, formatGuessForSubmission } from '../utils/flagHelpers';
 import { GAME_ERRORS, createSuccess, createError } from '../utils/gameErrors';
 
 const defaultConfig: GameConfig = {
-  wordLength: gameConfig.wordLength,
   maxAttempts: gameConfig.maxAttempts,
   animationSpeed: gameConfig.animationSpeed,
   hardMode: gameConfig.hardMode,
-  allowDuplicateLetters: gameConfig.allowDuplicateLetters,
   theme: gameConfig.theme as 'light' | 'dark' | 'auto',
+  difficulty: gameConfig.difficulty as 'easy' | 'medium' | 'hard',
 };
 
 const defaultStats: GameStats = {
@@ -23,135 +22,171 @@ const defaultStats: GameStats = {
   guessDistribution: {},
 };
 
-const createEmptyGuesses = (maxAttempts: number, wordLength: number): Guess[] => {
-  return Array.from({ length: maxAttempts }, () => ({
-    letters: Array.from({ length: wordLength }, () => ({ value: '', state: 'empty' as LetterState })),
-    word: '',
-    isSubmitted: false,
-  }));
+const createEmptyGuesses = (maxAttempts: number): FlagGuess[] => {
+  return Array.from({ length: maxAttempts }, () => createEmptyFlagGuess());
 };
 
 const updateCurrentRowWithGuess = (
-  guesses: Guess[],
+  guesses: FlagGuess[],
   currentRow: number,
-  newGuess: string,
-  wordLength: number
-): Guess[] => {
+  newGuess: Partial<Pick<Flag, 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern'>>
+): FlagGuess[] => {
   const newGuesses = [...guesses];
-
-  for (let i = 0; i < wordLength; i++) {
-    newGuesses[currentRow].letters[i] = {
-      value: newGuess[i] || '',
-      state: newGuess[i] ? 'filled' : 'empty',
-    };
-  }
-  newGuesses[currentRow].word = newGuess;
+  
+  newGuesses[currentRow] = {
+    primaryColor: newGuess.primaryColor || null,
+    secondaryColor: newGuess.secondaryColor || null,
+    tertiaryColor: newGuess.tertiaryColor || null,
+    pattern: newGuess.pattern || null,
+    attributes: [
+      { 
+        type: 'primaryColor', 
+        value: newGuess.primaryColor || null, 
+        state: newGuess.primaryColor ? 'filled' : 'empty' 
+      },
+      { 
+        type: 'secondaryColor', 
+        value: newGuess.secondaryColor || null, 
+        state: newGuess.secondaryColor ? 'filled' : 'empty' 
+      },
+      { 
+        type: 'tertiaryColor', 
+        value: newGuess.tertiaryColor || null, 
+        state: newGuess.tertiaryColor ? 'filled' : 'empty' 
+      },
+      { 
+        type: 'pattern', 
+        value: newGuess.pattern || null, 
+        state: newGuess.pattern ? 'filled' : 'empty' 
+      }
+    ],
+    isSubmitted: false
+  };
 
   return newGuesses;
 };
 
-export const
-  useGameStore = create<GameStore>()(
+export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
       // Initial state
       gameState: 'loading',
-      solution: '',
-      guesses: createEmptyGuesses(defaultConfig.maxAttempts, defaultConfig.wordLength),
-      currentGuess: '',
+      solution: {} as Flag,
+      guesses: createEmptyGuesses(defaultConfig.maxAttempts),
+      currentGuess: {},
       currentRow: 0,
       config: defaultConfig,
       stats: defaultStats,
-      keyboardState: {},
+      inputState: {},
 
       // Actions
-      addLetter: (letter: string): GameActionResult => {
-        const { currentGuess, currentRow, config, gameState, guesses } = get();
+      setColor: (position: 'primary' | 'secondary' | 'tertiary', color: FlagColor): GameActionResult => {
+        const { currentGuess, currentRow, gameState, guesses } = get();
 
         if (gameState !== 'playing') {
           return createError(GAME_ERRORS.GAME_NOT_ACTIVE);
         }
 
-        if (currentGuess.length >= config.wordLength) {
-          return createError(GAME_ERRORS.WORD_ALREADY_COMPLETE);
-        }
-
-        const newGuess = currentGuess + letter.toUpperCase();
-        const newGuesses = updateCurrentRowWithGuess(guesses, currentRow, newGuess, config.wordLength);
+        const attributeKey = position === 'primary' ? 'primaryColor' : 
+                           position === 'secondary' ? 'secondaryColor' : 'tertiaryColor';
+        
+        const newGuess = { ...currentGuess, [attributeKey]: color };
+        const newGuesses = updateCurrentRowWithGuess(guesses, currentRow, newGuess);
 
         set({ currentGuess: newGuess, guesses: newGuesses });
         return createSuccess();
       },
 
-      removeLetter: (): GameActionResult => {
-        const { currentGuess, currentRow, config, gameState, guesses } = get();
+      setPattern: (pattern: FlagPattern): GameActionResult => {
+        const { currentGuess, currentRow, gameState, guesses } = get();
 
         if (gameState !== 'playing') {
           return createError(GAME_ERRORS.GAME_NOT_ACTIVE);
         }
 
-        if (currentGuess.length === 0) {
-          return createError(GAME_ERRORS.NO_LETTERS_TO_REMOVE);
+        const newGuess = { ...currentGuess, pattern };
+        const newGuesses = updateCurrentRowWithGuess(guesses, currentRow, newGuess);
+
+        set({ currentGuess: newGuess, guesses: newGuesses });
+        return createSuccess();
+      },
+
+      clearAttribute: (attribute: 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern'): GameActionResult => {
+        const { currentGuess, currentRow, gameState, guesses } = get();
+
+        if (gameState !== 'playing') {
+          return createError(GAME_ERRORS.GAME_NOT_ACTIVE);
         }
 
-        const newGuess = currentGuess.slice(0, -1);
-        const newGuesses = updateCurrentRowWithGuess(guesses, currentRow, newGuess, config.wordLength);
+        const newGuess = { ...currentGuess };
+        delete newGuess[attribute];
+        
+        const newGuesses = updateCurrentRowWithGuess(guesses, currentRow, newGuess);
 
         set({ currentGuess: newGuess, guesses: newGuesses });
         return createSuccess();
       },
 
       submitGuess: (): GameActionResult => {
-        const { currentGuess, currentRow, config, solution, guesses, keyboardState, gameState } = get();
+        const { currentGuess, currentRow, config, solution, guesses, inputState, gameState } = get();
 
         if (gameState !== 'playing') {
           return createError(GAME_ERRORS.GAME_NOT_ACTIVE);
         }
 
-        if (currentGuess.length !== config.wordLength) {
-          return createError(GAME_ERRORS.WORD_INCOMPLETE(config.wordLength));
+        if (!isGuessComplete(currentGuess)) {
+          return createError(GAME_ERRORS.GUESS_INCOMPLETE);
         }
 
-        if (!isValidWord(currentGuess)) {
-          return createError(GAME_ERRORS.WORD_INVALID);
-        }
-
-        // Check if word has already been tried
+        // Check if guess has already been tried
+        const formattedGuess = formatGuessForSubmission(currentGuess);
         const previousGuesses = guesses.slice(0, currentRow).filter(guess => guess.isSubmitted);
-        if (previousGuesses.some(guess => guess.word === currentGuess)) {
-          return createError(GAME_ERRORS.WORD_ALREADY_TRIED);
+        const alreadyTried = previousGuesses.some(guess => 
+          guess.primaryColor === formattedGuess.primaryColor &&
+          guess.secondaryColor === formattedGuess.secondaryColor &&
+          guess.tertiaryColor === formattedGuess.tertiaryColor &&
+          guess.pattern === formattedGuess.pattern
+        );
+
+        if (alreadyTried) {
+          return createError(GAME_ERRORS.GUESS_ALREADY_TRIED);
         }
 
         const newGuesses = [...guesses];
-        const letterStates = checkLetterStates(currentGuess, solution);
+        const flagAttributes = checkFlagAttributes(formattedGuess, solution);
 
-        // Update the current row with letter states
-        newGuesses[currentRow].letters = letterStates;
-        newGuesses[currentRow].isSubmitted = true;
+        // Update the current row with flag attributes
+        newGuesses[currentRow] = {
+          ...formattedGuess,
+          attributes: flagAttributes,
+          isSubmitted: true
+        };
 
-        // Update keyboard state
-        const newKeyboardState = { ...keyboardState };
-        letterStates.forEach((letter) => {
-          const currentState = newKeyboardState[letter.value];
-          // Priority: correct > present > absent
-          if (!currentState || currentState === 'empty') {
-            newKeyboardState[letter.value] = letter.state;
-          } else if (currentState !== 'correct' && letter.state === 'correct') {
-            newKeyboardState[letter.value] = letter.state;
-          } else if (currentState === 'absent' && letter.state === 'present') {
-            newKeyboardState[letter.value] = letter.state;
+        // Update input state for UI feedback
+        const newInputState = { ...inputState };
+        flagAttributes.forEach((attr) => {
+          if (attr.value) {
+            const currentState = newInputState[attr.value];
+            // Priority: correct > present > absent
+            if (!currentState || currentState === 'empty') {
+              newInputState[attr.value] = attr.state;
+            } else if (currentState !== 'correct' && attr.state === 'correct') {
+              newInputState[attr.value] = attr.state;
+            } else if (currentState === 'absent' && attr.state === 'present') {
+              newInputState[attr.value] = attr.state;
+            }
           }
         });
 
         // Check win condition
-        const isCorrect = currentGuess === solution;
+        const isCorrect = isCorrectGuess(formattedGuess, solution);
         const isGameOver = isCorrect || currentRow + 1 >= config.maxAttempts;
 
         set({
           guesses: newGuesses,
-          currentGuess: '',
+          currentGuess: {},
           currentRow: currentRow + 1,
-          keyboardState: newKeyboardState,
+          inputState: newInputState,
           gameState: isCorrect ? 'won' : isGameOver ? 'lost' : 'playing',
         });
 
@@ -160,22 +195,22 @@ export const
           get().updateStats(isCorrect, currentRow + 1);
         }
 
-        return createSuccess(isCorrect ? 'Correct!' : 'Good guess!');
+        return createSuccess(isCorrect ? 'Correct! You found the flag!' : 'Good guess!');
       },
 
       resetGame: () => {
         const { config } = get();
-        const newSolution = getRandomSolution();
+        const newSolution = getRandomFlag();
 
-        console.log(newSolution);
+        console.log('New flag solution:', newSolution.name, newSolution.flagEmoji);
 
         set({
           gameState: 'playing',
           solution: newSolution,
-          guesses: createEmptyGuesses(config.maxAttempts, config.wordLength),
-          currentGuess: '',
+          guesses: createEmptyGuesses(config.maxAttempts),
+          currentGuess: {},
           currentRow: 0,
-          keyboardState: {},
+          inputState: {},
         });
       },
 
@@ -185,7 +220,7 @@ export const
 
         set({
           config: updatedConfig,
-          guesses: createEmptyGuesses(updatedConfig.maxAttempts, updatedConfig.wordLength),
+          guesses: createEmptyGuesses(updatedConfig.maxAttempts),
         });
       },
 

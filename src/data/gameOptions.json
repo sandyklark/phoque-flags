@@ -1,0 +1,28 @@
+{
+  "colors": [
+    "red",
+    "blue", 
+    "white",
+    "green",
+    "yellow",
+    "black",
+    "orange",
+    "purple",
+    "pink",
+    "brown",
+    "gray"
+  ],
+  "patterns": [
+    "stripes",
+    "horizontal-stripes",
+    "vertical-stripes",
+    "cross",
+    "circle",
+    "stars",
+    "symbol",
+    "diamond",
+    "triangle",
+    "complex",
+    "solid"
+  ]
+}

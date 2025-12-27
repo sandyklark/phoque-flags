@@ -1,32 +1,43 @@
-import { LetterTile } from './LetterTile';
-import type { Guess } from '../types/game';
+import { AttributeTile } from './AttributeTile';
+import type { GuessRowProps, FlagAttribute } from '../types/game';
 
-interface GuessRowProps {
-  guess: Guess;
-  isCurrentRow: boolean;
-  currentGuess?: string;
-  wordLength: number;
-}
-
-export const GuessRow = ({ guess, isCurrentRow, currentGuess = '', wordLength }: GuessRowProps) => {
-  const getDisplayLetters = () => {
-    if (isCurrentRow && !guess.isSubmitted) {
-      return Array.from({ length: wordLength }, (_, i) => ({
-        value: currentGuess[i] || '',
-        state: currentGuess[i] ? 'filled' as const : 'empty' as const,
-      }));
+export const GuessRow = ({ guess, isCurrentRow, currentGuess }: GuessRowProps) => {
+  const getDisplayAttributes = (): FlagAttribute[] => {
+    if (isCurrentRow && !guess.isSubmitted && currentGuess) {
+      return [
+        { 
+          type: 'primaryColor', 
+          value: currentGuess.primaryColor || null, 
+          state: currentGuess.primaryColor ? 'filled' : 'empty' 
+        },
+        { 
+          type: 'secondaryColor', 
+          value: currentGuess.secondaryColor || null, 
+          state: currentGuess.secondaryColor ? 'filled' : 'empty' 
+        },
+        { 
+          type: 'tertiaryColor', 
+          value: currentGuess.tertiaryColor || null, 
+          state: currentGuess.tertiaryColor ? 'filled' : 'empty' 
+        },
+        { 
+          type: 'pattern', 
+          value: currentGuess.pattern || null, 
+          state: currentGuess.pattern ? 'filled' : 'empty' 
+        }
+      ];
     }
-    return guess.letters;
+    return guess.attributes;
   };
 
-  const letters = getDisplayLetters();
+  const attributes = getDisplayAttributes();
 
   return (
-    <div className="flex gap-1 justify-center">
-      {letters.map((letter, index) => (
-        <LetterTile
-          key={index}
-          letter={letter}
+    <div className="flex gap-2 justify-center">
+      {attributes.map((attribute, index) => (
+        <AttributeTile
+          key={`${attribute.type}-${index}`}
+          attribute={attribute}
           animationDelay={guess.isSubmitted ? index * 100 : 0}
           isCurrentGuess={isCurrentRow && !guess.isSubmitted}
         />

@@ -1,0 +1,252 @@
+[
+  {
+    "id": "US",
+    "name": "United States",
+    "primaryColor": "red",
+    "secondaryColor": "white",
+    "tertiaryColor": "blue",
+    "pattern": "stripes",
+    "continent": "North America",
+    "flagEmoji": "🇺🇸"
+  },
+  {
+    "id": "CA",
+    "name": "Canada",
+    "primaryColor": "red",
+    "secondaryColor": "white",
+    "tertiaryColor": null,
+    "pattern": "symbol",
+    "continent": "North America",
+    "flagEmoji": "🇨🇦"
+  },
+  {
+    "id": "FR",
+    "name": "France",
+    "primaryColor": "blue",
+    "secondaryColor": "white",
+    "tertiaryColor": "red",
+    "pattern": "vertical-stripes",
+    "continent": "Europe",
+    "flagEmoji": "🇫🇷"
+  },
+  {
+    "id": "DE",
+    "name": "Germany",
+    "primaryColor": "black",
+    "secondaryColor": "red",
+    "tertiaryColor": "yellow",
+    "pattern": "horizontal-stripes",
+    "continent": "Europe",
+    "flagEmoji": "🇩🇪"
+  },
+  {
+    "id": "GB",
+    "name": "United Kingdom",
+    "primaryColor": "blue",
+    "secondaryColor": "red",
+    "tertiaryColor": "white",
+    "pattern": "cross",
+    "continent": "Europe",
+    "flagEmoji": "🇬🇧"
+  },
+  {
+    "id": "JP",
+    "name": "Japan",
+    "primaryColor": "white",
+    "secondaryColor": "red",
+    "tertiaryColor": null,
+    "pattern": "circle",
+    "continent": "Asia",
+    "flagEmoji": "🇯🇵"
+  },
+  {
+    "id": "BR",
+    "name": "Brazil",
+    "primaryColor": "green",
+    "secondaryColor": "yellow",
+    "tertiaryColor": "blue",
+    "pattern": "diamond",
+    "continent": "South America",
+    "flagEmoji": "🇧🇷"
+  },
+  {
+    "id": "AU",
+    "name": "Australia",
+    "primaryColor": "blue",
+    "secondaryColor": "red",
+    "tertiaryColor": "white",
+    "pattern": "stars",
+    "continent": "Oceania",
+    "flagEmoji": "🇦🇺"
+  },
+  {
+    "id": "IT",
+    "name": "Italy",
+    "primaryColor": "green",
+    "secondaryColor": "white",
+    "tertiaryColor": "red",
+    "pattern": "vertical-stripes",
+    "continent": "Europe",
+    "flagEmoji": "🇮🇹"
+  },
+  {
+    "id": "ES",
+    "name": "Spain",
+    "primaryColor": "red",
+    "secondaryColor": "yellow",
+    "tertiaryColor": null,
+    "pattern": "horizontal-stripes",
+    "continent": "Europe",
+    "flagEmoji": "🇪🇸"
+  },
+  {
+    "id": "IN",
+    "name": "India",
+    "primaryColor": "orange",
+    "secondaryColor": "white",
+    "tertiaryColor": "green",
+    "pattern": "horizontal-stripes",
+    "continent": "Asia",
+    "flagEmoji": "🇮🇳"
+  },
+  {
+    "id": "MX",
+    "name": "Mexico",
+    "primaryColor": "green",
+    "secondaryColor": "white",
+    "tertiaryColor": "red",
+    "pattern": "vertical-stripes",
+    "continent": "North America",
+    "flagEmoji": "🇲🇽"
+  },
+  {
+    "id": "ZA",
+    "name": "South Africa",
+    "primaryColor": "green",
+    "secondaryColor": "yellow",
+    "tertiaryColor": "black",
+    "pattern": "complex",
+    "continent": "Africa",
+    "flagEmoji": "🇿🇦"
+  },
+  {
+    "id": "SE",
+    "name": "Sweden",
+    "primaryColor": "blue",
+    "secondaryColor": "yellow",
+    "tertiaryColor": null,
+    "pattern": "cross",
+    "continent": "Europe",
+    "flagEmoji": "🇸🇪"
+  },
+  {
+    "id": "NO",
+    "name": "Norway",
+    "primaryColor": "red",
+    "secondaryColor": "white",
+    "tertiaryColor": "blue",
+    "pattern": "cross",
+    "continent": "Europe",
+    "flagEmoji": "🇳🇴"
+  },
+  {
+    "id": "CN",
+    "name": "China",
+    "primaryColor": "red",
+    "secondaryColor": "yellow",
+    "tertiaryColor": null,
+    "pattern": "stars",
+    "continent": "Asia",
+    "flagEmoji": "🇨🇳"
+  },
+  {
+    "id": "RU",
+    "name": "Russia",
+    "primaryColor": "white",
+    "secondaryColor": "blue",
+    "tertiaryColor": "red",
+    "pattern": "horizontal-stripes",
+    "continent": "Europe",
+    "flagEmoji": "🇷🇺"
+  },
+  {
+    "id": "NL",
+    "name": "Netherlands",
+    "primaryColor": "red",
+    "secondaryColor": "white",
+    "tertiaryColor": "blue",
+    "pattern": "horizontal-stripes",
+    "continent": "Europe",
+    "flagEmoji": "🇳🇱"
+  },
+  {
+    "id": "KR",
+    "name": "South Korea",
+    "primaryColor": "white",
+    "secondaryColor": "red",
+    "tertiaryColor": "blue",
+    "pattern": "symbol",
+    "continent": "Asia",
+    "flagEmoji": "🇰🇷"
+  },
+  {
+    "id": "CH",
+    "name": "Switzerland",
+    "primaryColor": "red",
+    "secondaryColor": "white",
+    "tertiaryColor": null,
+    "pattern": "cross",
+    "continent": "Europe",
+    "flagEmoji": "🇨🇭"
+  },
+  {
+    "id": "AR",
+    "name": "Argentina",
+    "primaryColor": "blue",
+    "secondaryColor": "white",
+    "tertiaryColor": "yellow",
+    "pattern": "horizontal-stripes",
+    "continent": "South America",
+    "flagEmoji": "🇦🇷"
+  },
+  {
+    "id": "GR",
+    "name": "Greece",
+    "primaryColor": "blue",
+    "secondaryColor": "white",
+    "tertiaryColor": null,
+    "pattern": "stripes",
+    "continent": "Europe",
+    "flagEmoji": "🇬🇷"
+  },
+  {
+    "id": "PT",
+    "name": "Portugal",
+    "primaryColor": "green",
+    "secondaryColor": "red",
+    "tertiaryColor": "yellow",
+    "pattern": "vertical-stripes",
+    "continent": "Europe",
+    "flagEmoji": "🇵🇹"
+  },
+  {
+    "id": "TH",
+    "name": "Thailand",
+    "primaryColor": "red",
+    "secondaryColor": "white",
+    "tertiaryColor": "blue",
+    "pattern": "horizontal-stripes",
+    "continent": "Asia",
+    "flagEmoji": "🇹🇭"
+  },
+  {
+    "id": "TR",
+    "name": "Turkey",
+    "primaryColor": "red",
+    "secondaryColor": "white",
+    "tertiaryColor": null,
+    "pattern": "symbol",
+    "continent": "Asia",
+    "flagEmoji": "🇹🇷"
+  }
+]

@@ -5,12 +5,11 @@ export interface GameActionResult {
 }
 
 export interface GameConfig {
-  wordLength: number;
   maxAttempts: number;
   animationSpeed: number;
   hardMode: boolean;
-  allowDuplicateLetters: boolean;
   theme: 'light' | 'dark' | 'auto';
+  difficulty: 'easy' | 'medium' | 'hard';
 }
 
 export interface GameStats {
@@ -21,17 +20,34 @@ export interface GameStats {
   guessDistribution: Record<number, number>;
 }
 
-export type LetterState = 'correct' | 'present' | 'absent' | 'empty' | 'filled';
+export type FlagColor = 'red' | 'blue' | 'white' | 'green' | 'yellow' | 'black' | 'orange' | 'purple' | 'pink' | 'brown' | 'gray';
+export type FlagPattern = 'stripes' | 'horizontal-stripes' | 'vertical-stripes' | 'cross' | 'circle' | 'stars' | 'symbol' | 'diamond' | 'triangle' | 'complex' | 'solid';
+export type AttributeState = 'correct' | 'present' | 'absent' | 'empty' | 'filled';
 
-export interface Letter {
-  value: string;
-  state: LetterState;
+export interface FlagAttribute {
+  type: 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern';
+  value: FlagColor | FlagPattern | null;
+  state: AttributeState;
 }
 
-export interface Guess {
-  letters: Letter[];
-  word: string;
+export interface FlagGuess {
+  primaryColor: FlagColor | null;
+  secondaryColor: FlagColor | null;
+  tertiaryColor: FlagColor | null;
+  pattern: FlagPattern | null;
+  attributes: FlagAttribute[];
   isSubmitted: boolean;
+}
+
+export interface Flag {
+  id: string;
+  name: string;
+  primaryColor: FlagColor;
+  secondaryColor: FlagColor;
+  tertiaryColor: FlagColor | null;
+  pattern: FlagPattern;
+  continent: string;
+  flagEmoji: string;
 }
 
 export type GameState = 'playing' | 'won' | 'lost' | 'loading';
@@ -39,9 +55,9 @@ export type GameState = 'playing' | 'won' | 'lost' | 'loading';
 export interface GameStore {
   // Game state
   gameState: GameState;
-  solution: string;
-  guesses: Guess[];
-  currentGuess: string;
+  solution: Flag;
+  guesses: FlagGuess[];
+  currentGuess: Partial<Pick<Flag, 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern'>>;
   currentRow: number;
   
   // Configuration
@@ -50,12 +66,13 @@ export interface GameStore {
   // Statistics
   stats: GameStats;
   
-  // Keyboard state
-  keyboardState: Record<string, LetterState>;
+  // Input state
+  inputState: Record<string, AttributeState>;
   
   // Actions
-  addLetter: (letter: string) => GameActionResult;
-  removeLetter: () => GameActionResult;
+  setColor: (position: 'primary' | 'secondary' | 'tertiary', color: FlagColor) => GameActionResult;
+  setPattern: (pattern: FlagPattern) => GameActionResult;
+  clearAttribute: (attribute: 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern') => GameActionResult;
   submitGuess: () => GameActionResult;
   resetGame: () => void;
   loadConfig: (config: Partial<GameConfig>) => void;
@@ -63,36 +80,42 @@ export interface GameStore {
   setTheme: (theme: 'light' | 'dark' | 'auto') => void;
 }
 
-export interface WordList {
-  solutions: string[];
-  valid: string[];
-}
-
 export interface GameModalProps {
   isOpen: boolean;
   onClose: () => void;
   gameState: GameState;
-  solution: string;
+  solution: Flag;
   guessCount: number;
   stats: GameStats;
   onNewGame: () => void;
 }
 
-export interface KeyboardProps {
-  onKeyPress: (key: string) => void;
-  keyboardState: Record<string, LetterState>;
+export interface ColorPickerProps {
+  onColorSelect: (position: 'primary' | 'secondary' | 'tertiary', color: FlagColor) => void;
+  currentGuess: Partial<Pick<Flag, 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern'>>;
+  disabled: boolean;
+}
+
+export interface PatternPickerProps {
+  onPatternSelect: (pattern: FlagPattern) => void;
+  currentPattern: FlagPattern | null;
   disabled: boolean;
 }
 
 export interface GameBoardProps {
-  guesses: Guess[];
-  currentGuess: string;
+  guesses: FlagGuess[];
+  currentGuess: Partial<Pick<Flag, 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern'>>;
   maxAttempts: number;
-  wordLength: number;
 }
 
-export interface LetterTileProps {
-  letter: Letter;
+export interface AttributeTileProps {
+  attribute: FlagAttribute;
   animationDelay?: number;
   isCurrentGuess?: boolean;
+}
+
+export interface GuessRowProps {
+  guess: FlagGuess;
+  isCurrentRow: boolean;
+  currentGuess?: Partial<Pick<Flag, 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern'>>;
 }
