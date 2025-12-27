@@ -1,4 +1,18 @@
 import type { AttributeTileProps, FlagColor, FlagPattern } from '../types/game';
+import { 
+  GripHorizontal, 
+  GripVertical, 
+  Plus, 
+  Circle, 
+  Star, 
+  Shapes, 
+  Diamond, 
+  Triangle, 
+  Layers, 
+  Square,
+  TrendingUp,
+  Grip
+} from 'lucide-react';
 
 const colorStyles: Record<FlagColor, string> = {
   red: 'bg-red-500',
@@ -14,19 +28,19 @@ const colorStyles: Record<FlagColor, string> = {
   gray: 'bg-gray-500'
 };
 
-const patternEmojis: Record<FlagPattern, string> = {
-  'stripes': '▦',
-  'horizontal-stripes': '≡',
-  'vertical-stripes': '⫸',
-  'cross': '✝',
-  'circle': '●',
-  'stars': '✦',
-  'symbol': '⚡',
-  'diamond': '◆',
-  'triangle': '▲',
-  'complex': '◈',
-  'solid': '■',
-  'diagonal': '▦'
+const patternIcons: Record<FlagPattern, React.ComponentType<any>> = {
+  'stripes': Grip,
+  'horizontal-stripes': GripHorizontal,
+  'vertical-stripes': GripVertical,
+  'cross': Plus,
+  'circle': Circle,
+  'stars': Star,
+  'symbol': Shapes,
+  'diamond': Diamond,
+  'triangle': Triangle,
+  'complex': Layers,
+  'solid': Square,
+  'diagonal': TrendingUp
 };
 
 export const AttributeTile = ({ attribute, animationDelay = 0, isCurrentGuess = false, isFutureRow = false }: AttributeTileProps) => {
@@ -62,9 +76,10 @@ export const AttributeTile = ({ attribute, animationDelay = 0, isCurrentGuess = 
     }
 
     if (attribute.type === 'pattern') {
+      const PatternIcon = patternIcons[attribute.value as FlagPattern];
       return (
         <div className="flex items-center justify-center w-full h-full">
-          <span className="text-2xl">{patternEmojis[attribute.value as FlagPattern]}</span>
+          <PatternIcon size={20} />
         </div>
       );
     } else {

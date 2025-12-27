@@ -97,3 +97,26 @@ export const formatGuessForSubmission = (
     pattern: currentGuess.pattern!
   };
 };
+
+// List of all country codes in our database for verification
+export const SUPPORTED_COUNTRY_CODES = [
+  'AE', 'AR', 'AT', 'AU', 'BD', 'BE', 'BF', 'BJ', 'BN', 'BO', 'BR', 'CA', 
+  'CH', 'CI', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CZ', 'DE', 'DK', 
+  'DZ', 'EC', 'EG', 'ES', 'ET', 'FI', 'FJ', 'FR', 'GB', 'GH', 'GM', 'GN', 
+  'GR', 'GW', 'ID', 'IE', 'IL', 'IN', 'IQ', 'IR', 'IT', 'JM', 'JO', 'JP', 
+  'KE', 'KH', 'KR', 'LA', 'LB', 'LR', 'LY', 'MA', 'ML', 'MM', 'MR', 'MX', 
+  'MY', 'NE', 'NG', 'NL', 'NO', 'NZ', 'PE', 'PH', 'PK', 'PL', 'PT', 'PY', 
+  'RU', 'RW', 'SA', 'SD', 'SE', 'SG', 'SL', 'SN', 'SY', 'TG', 'TH', 'TN', 
+  'TR', 'TZ', 'UA', 'UG', 'US', 'UY', 'VE', 'VN', 'YE', 'ZA', 'ZW'
+];
+
+// Function to validate if a country code should work with flagcdn.com
+export const validateCountryCode = (countryCode: string): boolean => {
+  return SUPPORTED_COUNTRY_CODES.includes(countryCode.toUpperCase());
+};
+
+// Function to get flag URL with fallback
+export const getFlagUrl = (countryCode: string, format: 'svg' | 'png' = 'svg'): string => {
+  const code = countryCode.toLowerCase();
+  return `https://flagcdn.com/${code}.${format}`;
+};

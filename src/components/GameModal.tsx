@@ -1,4 +1,5 @@
 import type { GameModalProps } from '../types/game';
+import { FlagIcon } from './FlagIcon';
 
 export const GameModal = ({ 
   isOpen, 
@@ -13,7 +14,7 @@ export const GameModal = ({
   if (!isOpen) return null;
 
   const handleShare = async () => {
-    const shareText = `Flagdle ${guessCount}/6\n\n${gameState === 'won' ? '🎯' : '❌'} ${solution.name} ${solution.flagEmoji}\n\nPlay at flagdle.com`;
+    const shareText = `Flagdle ${guessCount}/5\n\n${gameState === 'won' ? '🎯' : '❌'} ${solution.name} ${solution.flagEmoji}\n\nPlay at flagdle.com`;
     
     if (navigator.share) {
       try {
@@ -41,7 +42,9 @@ export const GameModal = ({
           
           {/* Flag Display */}
           <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-            <div className="text-6xl mb-2">{solution.flagEmoji}</div>
+            <div className="flex justify-center mb-2">
+              <FlagIcon countryCode={solution.id} size={96} className="border border-gray-300 dark:border-gray-600" />
+            </div>
             <h3 className="text-xl font-bold mb-2">{solution.name}</h3>
             <div className="text-sm text-gray-600 dark:text-gray-400">
               <p><strong>Continent:</strong> {solution.continent}</p>

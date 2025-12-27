@@ -1,5 +1,5 @@
 {
-  "maxAttempts": 6,
+  "maxAttempts": 5,
   "animationSpeed": 300,
   "hardMode": false,
   "theme": "auto",

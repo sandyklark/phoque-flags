@@ -1,6 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import type { FlagColor, FlagPattern } from '../types/game';
 import gameOptions from '../data/gameOptions.json';
+import { 
+  GripHorizontal, 
+  GripVertical, 
+  Plus, 
+  Circle, 
+  Star, 
+  Shapes, 
+  Diamond, 
+  Triangle, 
+  Layers, 
+  Square,
+  TrendingUp,
+  Grip
+} from 'lucide-react';
 
 const colorStyles: Record<FlagColor, string> = {
   red: 'bg-red-500',
@@ -16,19 +30,19 @@ const colorStyles: Record<FlagColor, string> = {
   gray: 'bg-gray-500'
 };
 
-const patternInfo: Record<FlagPattern, { emoji: string; description: string }> = {
-  'stripes': { emoji: '▦', description: 'General stripes' },
-  'horizontal-stripes': { emoji: '≡', description: 'Horizontal stripes' },
-  'vertical-stripes': { emoji: '⫸', description: 'Vertical stripes' },
-  'cross': { emoji: '✝', description: 'Cross pattern' },
-  'circle': { emoji: '●', description: 'Circle/dot' },
-  'stars': { emoji: '✦', description: 'Star(s)' },
-  'symbol': { emoji: '⚡', description: 'Symbol/emblem' },
-  'diamond': { emoji: '◆', description: 'Diamond shape' },
-  'triangle': { emoji: '▲', description: 'Triangle shape' },
-  'complex': { emoji: '◈', description: 'Complex pattern' },
-  'solid': { emoji: '■', description: 'Solid color' },
-  'diagonal': { emoji: '▦', description: 'Diagonal pattern' }
+const patternInfo: Record<FlagPattern, { icon: React.ComponentType<any>; description: string }> = {
+  'stripes': { icon: Grip, description: 'General stripes' },
+  'horizontal-stripes': { icon: GripHorizontal, description: 'Horizontal stripes' },
+  'vertical-stripes': { icon: GripVertical, description: 'Vertical stripes' },
+  'cross': { icon: Plus, description: 'Cross pattern' },
+  'circle': { icon: Circle, description: 'Circle/dot' },
+  'stars': { icon: Star, description: 'Star(s)' },
+  'symbol': { icon: Shapes, description: 'Symbol/emblem' },
+  'diamond': { icon: Diamond, description: 'Diamond shape' },
+  'triangle': { icon: Triangle, description: 'Triangle shape' },
+  'complex': { icon: Layers, description: 'Complex pattern' },
+  'solid': { icon: Square, description: 'Solid color' },
+  'diagonal': { icon: TrendingUp, description: 'Diagonal pattern' }
 };
 
 interface AttributeTileDropdownProps {
@@ -81,9 +95,10 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
     }
 
     if (isPattern) {
+      const PatternIcon = patternInfo[value as FlagPattern].icon;
       return (
         <div className="flex items-center justify-center w-full h-full">
-          <span className="text-2xl">{patternInfo[value as FlagPattern].emoji}</span>
+          <PatternIcon size={20} className="text-gray-700 dark:text-gray-200" />
         </div>
       );
     } else {
@@ -105,14 +120,16 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
       return (
         <div className="space-y-1">
           {patterns.map((pattern) => {
-            const { emoji, description } = patternInfo[pattern];
+            const { icon: PatternIcon, description } = patternInfo[pattern];
             return (
               <button
                 key={pattern}
                 onClick={() => handleSelection(pattern)}
                 className="w-full flex items-center p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
               >
-                <span className="text-xl mr-3">{emoji}</span>
+                <div className="mr-3 flex items-center justify-center w-6">
+                  <PatternIcon size={16} className="text-gray-600 dark:text-gray-300" />
+                </div>
                 <div className="flex-1">
                   <div className="text-sm font-medium capitalize">{pattern.replace('-', ' ')}</div>
                   <div className="text-xs text-gray-500 dark:text-gray-400">{description}</div>
