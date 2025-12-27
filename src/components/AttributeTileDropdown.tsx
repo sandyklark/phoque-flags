@@ -27,7 +27,8 @@ const patternInfo: Record<FlagPattern, { emoji: string; description: string }> =
   'diamond': { emoji: '◆', description: 'Diamond shape' },
   'triangle': { emoji: '▲', description: 'Triangle shape' },
   'complex': { emoji: '◈', description: 'Complex pattern' },
-  'solid': { emoji: '■', description: 'Solid color' }
+  'solid': { emoji: '■', description: 'Solid color' },
+  'diagonal': { emoji: '▦', description: 'Diagonal pattern' }
 };
 
 interface AttributeTileDropdownProps {

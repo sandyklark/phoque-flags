@@ -21,7 +21,7 @@ export interface GameStats {
 }
 
 export type FlagColor = 'red' | 'blue' | 'white' | 'green' | 'yellow' | 'black' | 'orange' | 'purple' | 'pink' | 'brown' | 'gray';
-export type FlagPattern = 'stripes' | 'horizontal-stripes' | 'vertical-stripes' | 'cross' | 'circle' | 'stars' | 'symbol' | 'diamond' | 'triangle' | 'complex' | 'solid';
+export type FlagPattern = 'stripes' | 'horizontal-stripes' | 'vertical-stripes' | 'cross' | 'circle' | 'stars' | 'symbol' | 'diamond' | 'triangle' | 'complex' | 'solid' | 'diagonal';
 export type AttributeState = 'correct' | 'present' | 'absent' | 'empty' | 'filled';
 
 export interface FlagAttribute {

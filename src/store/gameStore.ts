@@ -67,33 +67,41 @@ const updateCurrentRowWithGuess = (
 };
 
 const getRegionHint = (flag: Flag): string | null => {
+  // Updated to use UN M49 geoscheme subregions for accuracy
   const regions: Record<string, Record<string, string[]>> = {
     'Europe': {
-      'Northern Europe': ['United Kingdom', 'Ireland', 'Norway', 'Sweden', 'Denmark', 'Finland'],
-      'Western Europe': ['France', 'Germany', 'Netherlands', 'Belgium', 'Switzerland'],
-      'Southern Europe': ['Spain', 'Italy', 'Greece', 'Portugal'],
-      'Eastern Europe': ['Russia', 'Poland', 'Ukraine']
+      'Northern Europe': ['United Kingdom', 'Ireland', 'Norway', 'Sweden', 'Denmark', 'Finland', 'Iceland', 'Estonia', 'Latvia', 'Lithuania'],
+      'Western Europe': ['France', 'Germany', 'Netherlands', 'Belgium', 'Switzerland', 'Austria', 'Luxembourg'],
+      'Southern Europe': ['Spain', 'Italy', 'Greece', 'Portugal', 'Malta', 'Cyprus', 'Croatia', 'Slovenia', 'Bosnia and Herzegovina', 'Montenegro', 'Serbia', 'North Macedonia', 'Albania'],
+      'Eastern Europe': ['Russia', 'Poland', 'Ukraine', 'Belarus', 'Czech Republic', 'Slovakia', 'Hungary', 'Romania', 'Bulgaria', 'Moldova']
     },
     'Asia': {
-      'East Asia': ['China', 'Japan', 'South Korea'],
-      'Southeast Asia': ['Thailand', 'Vietnam', 'Indonesia', 'Philippines'],
-      'South Asia': ['India', 'Pakistan', 'Bangladesh'],
-      'Western Asia': ['Turkey', 'Iran', 'Israel']
+      'East Asia': ['China', 'Japan', 'South Korea', 'North Korea', 'Mongolia'],
+      'Southeast Asia': ['Thailand', 'Vietnam', 'Indonesia', 'Philippines', 'Malaysia', 'Singapore', 'Myanmar', 'Cambodia', 'Laos', 'Brunei', 'East Timor'],
+      'South Asia': ['India', 'Pakistan', 'Bangladesh', 'Sri Lanka', 'Nepal', 'Bhutan', 'Afghanistan', 'Maldives'],
+      'Western Asia': ['Turkey', 'Iran', 'Iraq', 'Saudi Arabia', 'Israel', 'Jordan', 'Lebanon', 'Syria', 'Yemen', 'Oman', 'UAE', 'Qatar', 'Bahrain', 'Kuwait', 'Georgia', 'Armenia', 'Azerbaijan'],
+      'Central Asia': ['Kazakhstan', 'Uzbekistan', 'Turkmenistan', 'Kyrgyzstan', 'Tajikistan']
     },
     'Africa': {
-      'North Africa': ['Egypt', 'Morocco', 'Algeria', 'Tunisia'],
-      'West Africa': ['Nigeria', 'Ghana', 'Senegal'],
-      'East Africa': ['Kenya', 'Ethiopia', 'Tanzania'],
-      'Southern Africa': ['South Africa', 'Zimbabwe']
+      'Northern Africa': ['Egypt', 'Libya', 'Tunisia', 'Algeria', 'Morocco', 'Sudan'],
+      'Western Africa': ['Nigeria', 'Ghana', 'Senegal', 'Mali', 'Burkina Faso', 'Niger', 'Guinea', 'Sierra Leone', 'Liberia', 'Ivory Coast', 'Togo', 'Benin', 'Mauritania', 'Gambia', 'Guinea-Bissau', 'Cape Verde'],
+      'Eastern Africa': ['Kenya', 'Ethiopia', 'Tanzania', 'Uganda', 'Rwanda', 'Burundi', 'Somalia', 'Eritrea', 'Djibouti', 'Madagascar', 'Comoros', 'Mauritius', 'Seychelles'],
+      'Middle Africa': ['Democratic Republic of Congo', 'Cameroon', 'Central African Republic', 'Chad', 'Republic of Congo', 'Equatorial Guinea', 'Gabon', 'São Tomé and Príncipe'],
+      'Southern Africa': ['South Africa', 'Zimbabwe', 'Botswana', 'Namibia', 'Zambia', 'Malawi', 'Mozambique', 'Angola', 'Lesotho', 'Swaziland']
     },
     'North America': {
-      'North America': ['United States', 'Canada', 'Mexico']
+      'Northern America': ['United States', 'Canada'],
+      'Central America': ['Mexico', 'Guatemala', 'Belize', 'El Salvador', 'Honduras', 'Nicaragua', 'Costa Rica', 'Panama'],
+      'Caribbean': ['Cuba', 'Jamaica', 'Haiti', 'Dominican Republic', 'Trinidad and Tobago', 'Bahamas', 'Barbados', 'Saint Lucia', 'Grenada', 'Saint Vincent and the Grenadines', 'Antigua and Barbuda', 'Dominica', 'Saint Kitts and Nevis']
     },
     'South America': {
-      'South America': ['Brazil', 'Argentina', 'Chile', 'Peru', 'Colombia']
+      'South America': ['Brazil', 'Argentina', 'Chile', 'Peru', 'Colombia', 'Venezuela', 'Ecuador', 'Bolivia', 'Paraguay', 'Uruguay', 'Guyana', 'Suriname']
     },
     'Oceania': {
-      'Oceania': ['Australia', 'New Zealand']
+      'Australia and New Zealand': ['Australia', 'New Zealand'],
+      'Melanesia': ['Papua New Guinea', 'Fiji', 'Solomon Islands', 'Vanuatu', 'New Caledonia'],
+      'Micronesia': ['Palau', 'Marshall Islands', 'Federated States of Micronesia', 'Nauru', 'Kiribati'],
+      'Polynesia': ['Samoa', 'Tonga', 'Tuvalu', 'French Polynesia', 'American Samoa', 'Cook Islands']
     }
   };
 

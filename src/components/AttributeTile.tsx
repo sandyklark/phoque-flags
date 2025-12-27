@@ -25,7 +25,8 @@ const patternEmojis: Record<FlagPattern, string> = {
   'diamond': '◆',
   'triangle': '▲',
   'complex': '◈',
-  'solid': '■'
+  'solid': '■',
+  'diagonal': '▦'
 };
 
 export const AttributeTile = ({ attribute, animationDelay = 0, isCurrentGuess = false, isFutureRow = false }: AttributeTileProps) => {
