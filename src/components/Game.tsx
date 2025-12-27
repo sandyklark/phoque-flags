@@ -171,7 +171,10 @@ export const Game = () => {
 
       <main className="max-w-4xl mx-auto p-4">
         {/* Single Column Game Board with Integrated Input */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 relative">
+          {/* Cute edge horse */}
+          <div className="edge-horse"></div>
+          
           <h2 className="text-xl font-semibold mb-4 text-center">Flagdle - Guess the Flag</h2>
           
           <GameBoard
