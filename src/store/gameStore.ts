@@ -32,32 +32,32 @@ const updateCurrentRowWithGuess = (
   newGuess: Partial<Pick<Flag, 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern'>>
 ): FlagGuess[] => {
   const newGuesses = [...guesses];
-  
+
   newGuesses[currentRow] = {
     primaryColor: newGuess.primaryColor || null,
     secondaryColor: newGuess.secondaryColor || null,
     tertiaryColor: newGuess.tertiaryColor || null,
     pattern: newGuess.pattern || null,
     attributes: [
-      { 
-        type: 'primaryColor', 
-        value: newGuess.primaryColor || null, 
-        state: newGuess.primaryColor ? 'filled' : 'empty' 
+      {
+        type: 'primaryColor',
+        value: newGuess.primaryColor || null,
+        state: newGuess.primaryColor ? 'filled' : 'empty'
       },
-      { 
-        type: 'secondaryColor', 
-        value: newGuess.secondaryColor || null, 
-        state: newGuess.secondaryColor ? 'filled' : 'empty' 
+      {
+        type: 'secondaryColor',
+        value: newGuess.secondaryColor || null,
+        state: newGuess.secondaryColor ? 'filled' : 'empty'
       },
-      { 
-        type: 'tertiaryColor', 
-        value: newGuess.tertiaryColor || null, 
-        state: newGuess.tertiaryColor ? 'filled' : 'empty' 
+      {
+        type: 'tertiaryColor',
+        value: newGuess.tertiaryColor || null,
+        state: newGuess.tertiaryColor ? 'filled' : 'empty'
       },
-      { 
-        type: 'pattern', 
-        value: newGuess.pattern || null, 
-        state: newGuess.pattern ? 'filled' : 'empty' 
+      {
+        type: 'pattern',
+        value: newGuess.pattern || null,
+        state: newGuess.pattern ? 'filled' : 'empty'
       }
     ],
     isSubmitted: false
@@ -113,7 +113,7 @@ const getRegionHint = (flag: Flag): string | null => {
       return `This flag is from ${region}`;
     }
   }
-  
+
   return null;
 };
 
@@ -137,7 +137,7 @@ export const useGameStore = create<GameStore>()(
         showModal: false,
         latestHint: null
       },
-      
+
       // Daily game state
       isDailyMode: true,
       puzzleNumber: getPuzzleNumber(),
@@ -150,9 +150,9 @@ export const useGameStore = create<GameStore>()(
           return createError(GAME_ERRORS.GAME_NOT_ACTIVE);
         }
 
-        const attributeKey = position === 'primary' ? 'primaryColor' : 
+        const attributeKey = position === 'primary' ? 'primaryColor' :
                            position === 'secondary' ? 'secondaryColor' : 'tertiaryColor';
-        
+
         const newGuess = { ...currentGuess, [attributeKey]: color };
         const newGuesses = updateCurrentRowWithGuess(guesses, currentRow, newGuess);
 
@@ -183,7 +183,7 @@ export const useGameStore = create<GameStore>()(
 
         const newGuess = { ...currentGuess };
         delete newGuess[attribute];
-        
+
         const newGuesses = updateCurrentRowWithGuess(guesses, currentRow, newGuess);
 
         set({ currentGuess: newGuess, guesses: newGuesses });
@@ -204,7 +204,7 @@ export const useGameStore = create<GameStore>()(
         // Check if guess has already been tried
         const formattedGuess = formatGuessForSubmission(currentGuess);
         const previousGuesses = guesses.slice(0, currentRow).filter(guess => guess.isSubmitted);
-        const alreadyTried = previousGuesses.some(guess => 
+        const alreadyTried = previousGuesses.some(guess =>
           guess.primaryColor === formattedGuess.primaryColor &&
           guess.secondaryColor === formattedGuess.secondaryColor &&
           guess.tertiaryColor === formattedGuess.tertiaryColor &&
@@ -268,23 +268,40 @@ export const useGameStore = create<GameStore>()(
           get().saveDailyProgress();
         }
 
-        return createSuccess(isCorrect ? 'Correct! You found the flag!' : 'Good guess!');
+        // Return appropriate message with snark for wrong guesses
+        if (isCorrect) {
+          return createSuccess('Correct! You found the flag!');
+        } else {
+          const snarkMessages = [
+            "Mmm... Slightly disappointing.",
+            "Wow.. Are you even trying?",
+            "What are you doing? This is embarrassing...",
+            "You have seen a map before right?",
+          ];
+
+          const wrongCount = currentRow; // 0-based, so first wrong = 0
+          const snarkMessage = wrongCount < snarkMessages.length
+            ? snarkMessages[wrongCount]
+            : "Well, this is embarrassing...";
+
+          return createSuccess(snarkMessage);
+        }
       },
 
       getHint: (): GameActionResult & { hint?: string } => {
         const { gameState, hintState, solution } = get();
-        
+
         if (gameState !== 'playing') {
           return createError(GAME_ERRORS.GAME_NOT_ACTIVE);
         }
-        
+
         if (hintState.hintsUsed >= hintState.maxHints) {
           return createError('No more hints available');
         }
-        
+
         const nextHintIndex = hintState.hintsUsed;
         let hint = '';
-        
+
         switch (nextHintIndex) {
           case 0:
             hint = `This flag is from ${solution.continent}`;
@@ -300,7 +317,7 @@ export const useGameStore = create<GameStore>()(
           default:
             return createError('No more hints available');
         }
-        
+
         set({
           hintState: {
             ...hintState,
@@ -310,17 +327,17 @@ export const useGameStore = create<GameStore>()(
             latestHint: hint
           }
         });
-        
+
         return { success: true, hint };
       },
 
       autoTriggerHints: (currentRow: number) => {
         const { hintState, solution } = get();
-        
+
         // Define thresholds: after 2nd, 4th, and 5th failed guesses
         const thresholds = [2, 4, 5];
         const currentThreshold = currentRow;
-        
+
         // Check if we should trigger a hint at this threshold
         for (let i = 0; i < thresholds.length; i++) {
           const threshold = thresholds[i];
@@ -329,7 +346,7 @@ export const useGameStore = create<GameStore>()(
             if (hintState.hintsUsed < hintState.maxHints) {
               let hint = '';
               const hintIndex = hintState.hintsUsed;
-              
+
               switch (hintIndex) {
                 case 0:
                   hint = `This flag is from ${solution.continent}`;
@@ -342,7 +359,7 @@ export const useGameStore = create<GameStore>()(
                   hint = `The country name starts with "${solution.name.charAt(0)}"`;
                   break;
               }
-              
+
               if (hint) {
                 set({
                   hintState: {
@@ -419,7 +436,7 @@ export const useGameStore = create<GameStore>()(
           config: freshConfig,
           guesses: createEmptyGuesses(freshConfig.maxAttempts),
         });
-        
+
         // Also reset the game to apply the new config
         get().resetGame();
       },
@@ -465,11 +482,11 @@ export const useGameStore = create<GameStore>()(
       loadDailyGame: () => {
         const todayString = getTodaysDateString();
         const storedDaily = localStorage.getItem('flagdle-daily-game');
-        
+
         if (storedDaily) {
           try {
             const dailyState: DailyGameState = JSON.parse(storedDaily);
-            
+
             // Check if it's the same day
             if (dailyState.date === todayString) {
               // Restore today's progress
@@ -484,7 +501,7 @@ export const useGameStore = create<GameStore>()(
                 inputState: {},
                 currentGuess: {}
               });
-              
+
               // Load the full flag data
               const todaysFlag = getTodaysFlag();
               set({ solution: todaysFlag });
@@ -494,13 +511,13 @@ export const useGameStore = create<GameStore>()(
             console.warn('Failed to load daily game state:', error);
           }
         }
-        
+
         // Start fresh daily game
         const todaysFlag = getTodaysFlag();
         const puzzleNum = getPuzzleNumber();
-        
+
         console.log(`Daily Flagdle #${puzzleNum}:`, todaysFlag.name, todaysFlag.flagEmoji);
-        
+
         set({
           isDailyMode: true,
           puzzleNumber: puzzleNum,
@@ -519,7 +536,7 @@ export const useGameStore = create<GameStore>()(
             latestHint: null
           }
         });
-        
+
         // Save initial daily state
         get().saveDailyProgress();
       },
@@ -527,7 +544,7 @@ export const useGameStore = create<GameStore>()(
       saveDailyProgress: () => {
         const state = get();
         if (!state.isDailyMode) return;
-        
+
         const dailyState: DailyGameState = {
           date: getTodaysDateString(),
           puzzleNumber: state.puzzleNumber,
@@ -538,7 +555,7 @@ export const useGameStore = create<GameStore>()(
           hintState: state.hintState,
           gameState: state.gameState
         };
-        
+
         localStorage.setItem('flagdle-daily-game', JSON.stringify(dailyState));
       },
 
@@ -546,7 +563,7 @@ export const useGameStore = create<GameStore>()(
         // Switch to test mode with random flag
         const randomFlag = getRandomFlag();
         console.log('Test mode:', randomFlag.name, randomFlag.flagEmoji);
-        
+
         set({
           isDailyMode: false,
           gameState: 'playing',
@@ -569,10 +586,10 @@ export const useGameStore = create<GameStore>()(
       checkForNewDay: () => {
         const state = get();
         if (!state.isDailyMode) return;
-        
+
         const todayString = getTodaysDateString();
         const storedDaily = localStorage.getItem('flagdle-daily-game');
-        
+
         if (storedDaily) {
           try {
             const dailyState: DailyGameState = JSON.parse(storedDaily);
@@ -605,7 +622,7 @@ const initializeGame = () => {
   const store = useGameStore.getState();
   // Force reload config from file to get latest values
   store.reloadConfigFromFile();
-  
+
   // Load today's daily puzzle or restore progress
   store.loadDailyGame();
 };

@@ -32,6 +32,7 @@ export const Game = () => {
   const [showModal, setShowModal] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [notification, setNotification] = useState('');
+  const [snarkMessage, setSnarkMessage] = useState('');
 
   useEffect(() => {
     if (gameState === 'won' || gameState === 'lost') {
@@ -79,7 +80,13 @@ export const Game = () => {
     if (!result.success && result.error) {
       showNotification(result.error);
     } else if (result.success && result.message) {
-      showNotification(result.message);
+      // Check if it's a success message (correct) or snark message (wrong)
+      if (result.message === 'Correct! You found the flag!') {
+        showNotification(result.message);
+      } else {
+        // It's a snark message for wrong guess
+        showSnarkMessage(result.message);
+      }
     }
   };
 
@@ -93,6 +100,11 @@ export const Game = () => {
   const showNotification = (message: string) => {
     setNotification(message);
     setTimeout(() => setNotification(''), 3000);
+  };
+
+  const showSnarkMessage = (message: string) => {
+    setSnarkMessage(message);
+    setTimeout(() => setSnarkMessage(''), 10000); // 10 seconds for snark
   };
 
   const handleNewGame = () => {
@@ -178,6 +190,15 @@ export const Game = () => {
           <div className="flex justify-center mt-4">
             <HintButton />
           </div>
+          
+          {/* Snark Message */}
+          {snarkMessage && (
+            <div className="mt-4 text-center animate-fade-in">
+              <p className="text-sm text-orange-600 dark:text-orange-400 italic font-medium">
+                {snarkMessage}
+              </p>
+            </div>
+          )}
         </div>
       </main>
 

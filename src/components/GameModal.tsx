@@ -28,6 +28,7 @@ export const GameModal = ({
     }
   };
 
+
   const winPercentage = stats.gamesPlayed > 0 
     ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) 
     : 0;
