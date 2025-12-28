@@ -51,7 +51,9 @@ interface AttributeTileDropdownProps {
 
 export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOptional = false }: AttributeTileDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState<'center' | 'left' | 'right'>('center');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   
   const isPattern = type === 'pattern';
   const colors = gameOptions.colors as FlagColor[];
@@ -67,6 +69,28 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Calculate dropdown position when opening
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const dropdownWidth = isPattern ? 288 : 256; // w-72 = 288px, w-64 = 256px
+      const viewportWidth = window.innerWidth;
+      const margin = 16; // 1rem margin
+
+      // Check if centered position would go off screen
+      const centeredLeft = buttonRect.left + buttonRect.width / 2 - dropdownWidth / 2;
+      const centeredRight = centeredLeft + dropdownWidth;
+
+      if (centeredLeft < margin) {
+        setDropdownPosition('left');
+      } else if (centeredRight > viewportWidth - margin) {
+        setDropdownPosition('right');
+      } else {
+        setDropdownPosition('center');
+      }
+    }
+  }, [isOpen, isPattern]);
 
   const handleSelection = (selectedValue: FlagColor | FlagPattern) => {
     onChange(selectedValue);
@@ -171,6 +195,7 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
     <div className="relative" ref={dropdownRef}>
       {/* Clickable Tile */}
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         aria-label={`Select ${type.replace('Color', ' color').replace(/([A-Z])/g, ' $1').toLowerCase()}`}
         aria-expanded={isOpen}
@@ -191,10 +216,13 @@ export const AttributeTileDropdown = ({ type, value, onChange, onClear, isOption
       {/* Dropdown Menu */}
       {isOpen && (
         <div className={`
-          absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 
+          absolute top-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 
           rounded-lg shadow-lg z-50 p-2 max-h-64 overflow-y-auto
           ${isPattern ? 'w-72 sm:w-72' : 'w-64 sm:w-64'}
           max-w-[calc(100vw-2rem)]
+          ${dropdownPosition === 'center' ? 'left-1/2 transform -translate-x-1/2' : ''}
+          ${dropdownPosition === 'left' ? 'left-0' : ''}
+          ${dropdownPosition === 'right' ? 'right-0' : ''}
         `}>
           {getDropdownContent()}
         </div>
