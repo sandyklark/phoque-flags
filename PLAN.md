@@ -1,12 +1,12 @@
-# Phoque Flags Project Status & Roadmap
+# Where the Phoque? Project Status & Roadmap
 
-## 🎯 Current Status: **FULLY FUNCTIONAL PHOQUE FLAGS GAME**
+## 🎯 Current Status: **FULLY FUNCTIONAL WHERE THE PHOQUE? GAME**
 
-The Wordle clone has been successfully transformed into Phoque Flags - a flag guessing game! 
+The Wordle clone has been successfully transformed into Where the Phoque? - a flag guessing game! 
 
 ## 🚀 What We Have Now
 
-**Phoque Flags** is a React/Zustand/Tailwind game where players guess country flags by their colors and patterns:
+**Where the Phoque?** is a React/Zustand/Tailwind game where players guess country flags by their colors and patterns:
 - **Game Mechanics**: Guess flags using primary color, secondary color, optional tertiary color, and pattern type
 - **Feedback System**: Green (correct position), Yellow (color exists but wrong position), Gray (not in flag)
 - **25 Sample Flags**: Countries from all continents with detailed metadata

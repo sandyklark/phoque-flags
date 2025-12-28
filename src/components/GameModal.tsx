@@ -14,13 +14,13 @@ export const GameModal = ({
   if (!isOpen) return null;
 
   const handleShare = async () => {
-    const domain = window.location.hostname === 'localhost' ? 'phoqueflags.com' : window.location.host;
-    const shareText = `Phoque Flags ${guessCount}/5\n\n${gameState === 'won' ? '🎯' : '❌'} ${solution.name} ${solution.flagEmoji}\n\nPlay at https://${domain}`;
+    const domain = window.location.hostname === 'localhost' ? 'wherethephoque.com' : window.location.host;
+    const shareText = `Where the Phoque? ${guessCount}/5\n\n${gameState === 'won' ? '🎯' : '❌'} ${solution.name} ${solution.flagEmoji}\n\nPlay at https://${domain}`;
     
     if (navigator.share) {
       try {
         await navigator.share({ 
-          title: 'Phoque Flags - Daily Flag Game',
+          title: 'Where the Phoque? - Daily Flag Game',
           text: shareText,
           url: `https://${domain}`
         });

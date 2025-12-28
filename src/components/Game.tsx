@@ -137,7 +137,7 @@ export const Game = () => {
 
           <div className="flex flex-col items-center text-center flex-1 min-w-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">
-              Phoque Flags {isDailyMode ? `#${puzzleNumber}` : ''}
+              Where the Phoque? {isDailyMode ? `#${puzzleNumber}` : ''}
             </h1>
             <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
               {isDailyMode ? 'Daily Flag Puzzle' : 'Practice Mode'} - Guess the flag by its colors and patterns
@@ -180,7 +180,10 @@ export const Game = () => {
           {/* Seal parade with flag trail */}
           <SealParade />
           
-          <h2 className="text-xl font-semibold mb-4 text-center">Phoque Flags - Guess the Flag</h2>
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold mb-1">Where the Phoque?</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Guess the flag</p>
+          </div>
           
           <GameBoard
             guesses={guesses}
@@ -233,6 +236,29 @@ export const Game = () => {
         onClose={closeHintModal}
         newHint={hintState.latestHint || undefined}
       />
+
+      {/* Footer with tech badges */}
+      <footer className="mt-8 pb-4">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="flex justify-center items-center gap-2 flex-wrap">
+            <img 
+              src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" 
+              alt="React"
+              className="h-5"
+            />
+            <img 
+              src="https://img.shields.io/badge/Zustand-FF6B35?style=for-the-badge&logo=react&logoColor=white" 
+              alt="Zustand"
+              className="h-5"
+            />
+            <img 
+              src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white" 
+              alt="Bun"
+              className="h-5"
+            />
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

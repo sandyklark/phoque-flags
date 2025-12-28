@@ -1,4 +1,4 @@
-# 🦭 Phoque Flags
+# 🦭 Where the Phoque?
 
 A daily flag guessing game inspired by Wordle. Guess the country flag by its colors and patterns with our adorable seal companion!
 
@@ -108,4 +108,4 @@ This project is open source and available under the MIT License.
 
 ---
 
-Made with 🦭 by the Phoque Flags team
+Made with 🦭 by the Where the Phoque? team
