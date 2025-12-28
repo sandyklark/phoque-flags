@@ -5,7 +5,7 @@
     "primaryColor": "red",
     "secondaryColor": "white",
     "tertiaryColor": "blue",
-    "pattern": "stripes",
+    "pattern": "mixed-stripes",
     "continent": "North America",
     "flagEmoji": "🇺🇸"
   },
@@ -125,7 +125,7 @@
     "primaryColor": "green",
     "secondaryColor": "yellow",
     "tertiaryColor": "black",
-    "pattern": "complex",
+    "pattern": "geometric",
     "continent": "Africa",
     "flagEmoji": "🇿🇦"
   },
@@ -215,7 +215,7 @@
     "primaryColor": "blue",
     "secondaryColor": "white",
     "tertiaryColor": null,
-    "pattern": "stripes",
+    "pattern": "mixed-stripes",
     "continent": "Europe",
     "flagEmoji": "🇬🇷"
   },
@@ -455,7 +455,7 @@
     "primaryColor": "red",
     "secondaryColor": "white",
     "tertiaryColor": "blue",
-    "pattern": "stripes",
+    "pattern": "mixed-stripes",
     "continent": "Africa",
     "flagEmoji": "🇱🇷"
   },
@@ -475,7 +475,7 @@
     "primaryColor": "green",
     "secondaryColor": "yellow",
     "tertiaryColor": "red",
-    "pattern": "stripes",
+    "pattern": "mixed-stripes",
     "continent": "Africa",
     "flagEmoji": "🇹🇬"
   },
@@ -595,7 +595,7 @@
     "primaryColor": "red",
     "secondaryColor": "white",
     "tertiaryColor": "blue",
-    "pattern": "stripes",
+    "pattern": "mixed-stripes",
     "continent": "Asia",
     "flagEmoji": "🇲🇾"
   },
@@ -685,7 +685,7 @@
     "primaryColor": "blue",
     "secondaryColor": "white",
     "tertiaryColor": null,
-    "pattern": "stripes",
+    "pattern": "mixed-stripes",
     "continent": "Asia",
     "flagEmoji": "🇮🇱"
   },
@@ -825,7 +825,7 @@
     "primaryColor": "red",
     "secondaryColor": "white",
     "tertiaryColor": "blue",
-    "pattern": "stripes",
+    "pattern": "mixed-stripes",
     "continent": "South America",
     "flagEmoji": "🇨🇱"
   },
@@ -875,7 +875,7 @@
     "primaryColor": "blue",
     "secondaryColor": "white",
     "tertiaryColor": "red",
-    "pattern": "stripes",
+    "pattern": "mixed-stripes",
     "continent": "North America",
     "flagEmoji": "🇨🇺"
   },
@@ -915,7 +915,7 @@
     "primaryColor": "white",
     "secondaryColor": "blue",
     "tertiaryColor": null,
-    "pattern": "stripes",
+    "pattern": "mixed-stripes",
     "continent": "South America",
     "flagEmoji": "🇺🇾"
   },
@@ -945,7 +945,7 @@
     "primaryColor": "blue",
     "secondaryColor": "red",
     "tertiaryColor": "white",
-    "pattern": "complex",
+    "pattern": "geometric",
     "continent": "Oceania",
     "flagEmoji": "🇫🇯"
   }

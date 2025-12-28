@@ -22,9 +22,11 @@ A daily flag guessing game inspired by Wordle. Guess the country flag by its col
 - 💡 Progressive hint system (continent, region, first letter)
 - 📊 Statistics tracking and streak counting
 - 🌓 Dark/light theme support
-- 📱 Mobile responsive design
-- 🦭 Cute animated seal companion
+- 📱 Mobile responsive design with optimized dropdowns
+- 🦭 GPU-accelerated seal parade animation with performance toggle
 - 💬 Humorous feedback messages
+- ❓ Interactive how-to-play guide
+- 🎨 Distinct feedback colors (emerald for correct, amber for present)
 
 ## 🛠️ Development
 
@@ -86,13 +88,16 @@ Colors and patterns are validated against a comprehensive database of 96 world f
 
 ## 🚀 Deployment
 
-The project is configured for Vercel deployment:
+The project is configured for Vercel deployment at **wherethephoque.com**:
 
 1. Push to your repository
 2. Connect to Vercel
-3. Deploy automatically
+3. Set environment variables:
+   - `VITE_APP_DOMAIN=wherethephoque.com`
+   - `VITE_FLAG_CDN_URL=https://flagcdn.com`
+4. Deploy automatically
 
-The `vercel.json` configuration handles routing for the SPA.
+The project includes proper DNS configuration and SEO optimization for the wherethephoque.com domain.
 
 ## 🤝 Contributing
 

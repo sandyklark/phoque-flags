@@ -2,18 +2,17 @@ import { useState, useRef, useEffect } from 'react';
 import type { FlagColor, FlagPattern } from '../types/game';
 import gameOptions from '../data/gameOptions.json';
 import { 
-  GripHorizontal, 
-  GripVertical, 
+  Columns3, 
+  Rows3, 
   Plus, 
   Circle, 
   Star, 
   Shapes, 
   Diamond, 
   Triangle, 
-  Layers, 
-  Square,
+  Layers,
   TrendingUp,
-  Grip
+  Tally5
 } from 'lucide-react';
 
 const colorStyles: Record<FlagColor, string> = {
@@ -27,17 +26,16 @@ const colorStyles: Record<FlagColor, string> = {
 };
 
 const patternInfo: Record<FlagPattern, { icon: React.ComponentType<any>; description: string }> = {
-  'stripes': { icon: Grip, description: 'General stripes' },
-  'horizontal-stripes': { icon: GripHorizontal, description: 'Horizontal stripes' },
-  'vertical-stripes': { icon: GripVertical, description: 'Vertical stripes' },
+  'mixed-stripes': { icon: Tally5, description: 'Mixed stripe directions' },
+  'horizontal-stripes': { icon: Rows3, description: 'Horizontal stripes' },
+  'vertical-stripes': { icon: Columns3, description: 'Vertical stripes' },
   'cross': { icon: Plus, description: 'Cross pattern' },
   'circle': { icon: Circle, description: 'Circle/dot' },
   'stars': { icon: Star, description: 'Star(s)' },
   'symbol': { icon: Shapes, description: 'Symbol/emblem' },
   'diamond': { icon: Diamond, description: 'Diamond shape' },
   'triangle': { icon: Triangle, description: 'Triangle shape' },
-  'complex': { icon: Layers, description: 'Complex pattern' },
-  'solid': { icon: Square, description: 'Solid color' },
+  'geometric': { icon: Layers, description: 'Geometric patterns' },
   'diagonal': { icon: TrendingUp, description: 'Diagonal pattern' }
 };
 

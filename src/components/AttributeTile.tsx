@@ -1,17 +1,16 @@
 import type { AttributeTileProps, FlagColor, FlagPattern } from '../types/game';
 import { 
-  GripHorizontal, 
-  GripVertical, 
+  Columns3, 
+  Rows3, 
   Plus, 
   Circle, 
   Star, 
   Shapes, 
   Diamond, 
   Triangle, 
-  Layers, 
-  Square,
+  Layers,
   TrendingUp,
-  Grip
+  Tally5
 } from 'lucide-react';
 
 const colorStyles: Record<FlagColor, string> = {
@@ -25,17 +24,16 @@ const colorStyles: Record<FlagColor, string> = {
 };
 
 const patternIcons: Record<FlagPattern, React.ComponentType<any>> = {
-  'stripes': Grip,
-  'horizontal-stripes': GripHorizontal,
-  'vertical-stripes': GripVertical,
+  'mixed-stripes': Tally5,
+  'horizontal-stripes': Rows3,
+  'vertical-stripes': Columns3,
   'cross': Plus,
   'circle': Circle,
   'stars': Star,
   'symbol': Shapes,
   'diamond': Diamond,
   'triangle': Triangle,
-  'complex': Layers,
-  'solid': Square,
+  'geometric': Layers,
   'diagonal': TrendingUp
 };
 

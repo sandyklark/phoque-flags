@@ -6,13 +6,14 @@ The Wordle clone has been successfully transformed into Where the Phoque? - a fl
 
 ## 🚀 What We Have Now
 
-**Where the Phoque?** is a React/Zustand/Tailwind game where players guess country flags by their colors and patterns:
+**Where the Phoque?** is a production-ready React/Zustand/Tailwind game deployed at wherethephoque.com:
 - **Game Mechanics**: Guess flags using primary color, secondary color, optional tertiary color, and pattern type
-- **Feedback System**: Green (correct position), Yellow (color exists but wrong position), Gray (not in flag)
-- **25 Sample Flags**: Countries from all continents with detailed metadata
-- **Modern UI**: Two-column responsive layout with color pickers and pattern selectors
-- **Enhanced Win/Loss**: Shows actual flag emoji, country info, and detailed statistics
-- **All Original Features**: Statistics, themes, sharing, persistence
+- **Enhanced Feedback System**: Emerald (correct), Amber (present), Gray (absent) - distinct from flag colors
+- **96 World Flags**: Complete dataset with geographic classification and metadata
+- **Mobile-Optimized UI**: Responsive design with smart dropdown positioning
+- **Performance Features**: GPU-accelerated animations with optional disable toggle
+- **Enhanced UX**: How-to-play modal, compact mobile header, tech stack badges
+- **Production Deployment**: SEO optimized, proper domain configuration, social sharing
 
 ## ✅ Completed Implementation
 

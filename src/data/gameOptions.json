@@ -9,7 +9,7 @@
     "orange"
   ],
   "patterns": [
-    "stripes",
+    "mixed-stripes",
     "horizontal-stripes",
     "vertical-stripes",
     "cross",
@@ -18,8 +18,7 @@
     "symbol",
     "diamond",
     "triangle",
-    "complex",
-    "solid",
+    "geometric",
     "diagonal"
   ]
 }
