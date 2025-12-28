@@ -8,6 +8,9 @@
   height: 100%;
   pointer-events: none;
   z-index: 10;
+  /* Enable GPU acceleration for the container */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .seal-leader,
@@ -21,6 +24,10 @@
   font-size: 16px;
   pointer-events: none;
   animation: sealParadeAnimation 26s linear infinite;
+  /* GPU acceleration hints */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .seal-leader {
@@ -32,7 +39,7 @@
 }
 
 .flag-follower {
-  opacity: 0.8;
+  opacity: 1;
   z-index: 11;
 }
 
