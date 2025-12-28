@@ -5,6 +5,7 @@ import { GameModal } from './GameModal';
 import { GameStats } from './GameStats';
 import { HintButton } from './HintButton';
 import { HintModal } from './HintModal';
+import { HowToPlayModal } from './HowToPlayModal';
 import { SealParade } from './SealParade';
 import { isGuessComplete } from '../utils/flagHelpers';
 
@@ -32,6 +33,7 @@ export const Game = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [notification, setNotification] = useState('');
   const [snarkMessage, setSnarkMessage] = useState('');
 
@@ -126,14 +128,25 @@ export const Game = () => {
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 shadow-sm">
         <div className="max-w-4xl mx-auto flex justify-between items-center flex-wrap gap-2">
-          <button
-            onClick={() => setShowStats(true)}
-            className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            title="View game statistics"
-            aria-label="View game statistics"
-          >
-            📊 Stats
-          </button>
+          <div className="flex gap-1 sm:gap-2">
+            <button
+              onClick={() => setShowStats(true)}
+              className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              title="View game statistics"
+              aria-label="View game statistics"
+            >
+              📊 Stats
+            </button>
+            
+            <button
+              onClick={() => setShowHowToPlay(true)}
+              className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              title="How to play"
+              aria-label="How to play instructions"
+            >
+              ❓ Help
+            </button>
+          </div>
 
           <div className="flex flex-col items-center text-center flex-1 min-w-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">
@@ -235,6 +248,11 @@ export const Game = () => {
         isOpen={hintState.showModal}
         onClose={closeHintModal}
         newHint={hintState.latestHint || undefined}
+      />
+
+      <HowToPlayModal
+        isOpen={showHowToPlay}
+        onClose={() => setShowHowToPlay(false)}
       />
 
       {/* Footer with tech badges */}
