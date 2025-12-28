@@ -5,6 +5,7 @@ import { GameModal } from './GameModal';
 import { GameStats } from './GameStats';
 import { HintButton } from './HintButton';
 import { HintModal } from './HintModal';
+import { SealParade } from './SealParade';
 import { isGuessComplete } from '../utils/flagHelpers';
 
 export const Game = () => {
@@ -176,8 +177,8 @@ export const Game = () => {
       <main className="max-w-4xl mx-auto p-4">
         {/* Single Column Game Board with Integrated Input */}
         <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 relative">
-          {/* Cute edge horse */}
-          <div className="edge-horse"></div>
+          {/* Seal parade with flag trail */}
+          <SealParade />
           
           <h2 className="text-xl font-semibold mb-4 text-center">Phoque Flags - Guess the Flag</h2>
           

@@ -1,0 +1,137 @@
+/* Seal Parade Animation - Seal leading a trail of flag emojis around the game board */
+
+.seal-parade-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.seal-leader,
+.flag-follower {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  pointer-events: none;
+  animation: sealParadeAnimation 26s linear infinite;
+}
+
+.seal-leader {
+  z-index: 12;
+}
+
+.seal-leader .pulse-emoji {
+  font-size: 20px;
+}
+
+.flag-follower {
+  opacity: 0.8;
+  z-index: 11;
+}
+
+.flag-follower .pulse-emoji {
+  font-size: 14px;
+}
+
+.pulse-emoji {
+  display: inline-block;
+  animation: sealBounce 1.5s ease-out infinite;
+}
+
+@keyframes sealParadeAnimation {
+  /* Top edge - seal lying flat moving right */
+  0% { 
+    top: -12px; 
+    left: 0%; 
+    transform: rotate(180deg); 
+  }
+  24.9% { 
+    top: -12px; 
+    left: calc(100% - 24px); 
+    transform: rotate(180deg); 
+  }
+  
+  /* Quick turn */
+  25% { 
+    top: -12px; 
+    left: calc(100% - 24px); 
+    transform: rotate(-90deg); 
+  }
+  
+  /* Right edge - seal lying flat moving down */
+  25.1% { 
+    top: -12px; 
+    left: calc(100% - 24px); 
+    transform: rotate(-90deg); 
+  }
+  49.9% { 
+    top: calc(100% - 12px); 
+    left: calc(100% - 24px); 
+    transform: rotate(-90deg); 
+  }
+  
+  /* Quick turn */
+  50% { 
+    top: calc(100% - 12px); 
+    left: calc(100% - 24px); 
+    transform: rotate(0deg); 
+  }
+  
+  /* Bottom edge - seal lying flat moving left */
+  50.1% { 
+    top: calc(100% - 12px); 
+    left: calc(100% - 24px); 
+    transform: rotate(0deg); 
+  }
+  74.9% { 
+    top: calc(100% - 12px); 
+    left: 0%; 
+    transform: rotate(0deg); 
+  }
+  
+  /* Quick turn */
+  75% { 
+    top: calc(100% - 12px); 
+    left: 0%; 
+    transform: rotate(90deg); 
+  }
+  
+  /* Left edge - seal lying flat moving up */
+  75.1% { 
+    top: calc(100% - 12px); 
+    left: 0%; 
+    transform: rotate(90deg); 
+  }
+  99.9% { 
+    top: -12px; 
+    left: 0%; 
+    transform: rotate(90deg); 
+  }
+  
+  /* Quick turn back to start */
+  100% { 
+    top: -12px; 
+    left: 0%; 
+    transform: rotate(180deg); 
+  }
+}
+
+@keyframes sealBounce {
+  0%, 66.7%, 100% {
+    transform: scale(1);
+  }
+  16.7% {
+    transform: scale(1.8);
+  }
+  33.3% {
+    transform: scale(1);
+  }
+}
+
