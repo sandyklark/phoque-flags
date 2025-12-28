@@ -48,9 +48,9 @@ export const AttributeTile = ({ attribute, animationDelay = 0, isCurrentGuess = 
 
     switch (attribute.state) {
       case 'correct':
-        return 'bg-green-500 text-white border-green-600';
+        return 'bg-emerald-600 text-white border-emerald-700';
       case 'present':
-        return 'bg-yellow-500 text-white border-yellow-600';
+        return 'bg-amber-600 text-white border-amber-700';
       case 'absent':
         return 'bg-gray-400 text-white border-gray-500';
       case 'filled':

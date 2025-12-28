@@ -12,6 +12,7 @@ const defaultConfig: GameConfig = {
   hardMode: gameConfig.hardMode,
   theme: gameConfig.theme as 'light' | 'dark' | 'auto',
   difficulty: gameConfig.difficulty as 'easy' | 'medium' | 'hard',
+  animationsEnabled: true,
 };
 
 const defaultStats: GameStats = {
@@ -433,6 +434,7 @@ export const useGameStore = create<GameStore>()(
           hardMode: gameConfig.hardMode,
           theme: gameConfig.theme as 'light' | 'dark' | 'auto',
           difficulty: gameConfig.difficulty as 'easy' | 'medium' | 'hard',
+          animationsEnabled: true,
         };
 
         set({
@@ -479,6 +481,11 @@ export const useGameStore = create<GameStore>()(
             root.classList.remove('dark');
           }
         }
+      },
+
+      toggleAnimations: () => {
+        const { config } = get();
+        set({ config: { ...config, animationsEnabled: !config.animationsEnabled } });
       },
 
       // Daily game actions

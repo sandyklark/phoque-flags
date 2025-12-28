@@ -74,13 +74,13 @@ export const HowToPlayModal = ({ isOpen, onClose }: HowToPlayModalProps) => {
           <section>
             <h3 className="text-lg font-semibold mb-3 text-blue-600 dark:text-blue-400">💡 Understanding Feedback</h3>
             <div className="space-y-2">
-              <div className="flex items-center gap-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                <div className="w-4 h-4 bg-green-500 rounded"></div>
+              <div className="flex items-center gap-3 p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+                <div className="w-4 h-4 bg-emerald-600 rounded"></div>
                 <span><strong>Green:</strong> Correct color/pattern in the right position</span>
               </div>
-              <div className="flex items-center gap-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                <div className="w-4 h-4 bg-yellow-500 rounded"></div>
-                <span><strong>Yellow:</strong> Color is in the flag but in the wrong position</span>
+              <div className="flex items-center gap-3 p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+                <div className="w-4 h-4 bg-amber-600 rounded"></div>
+                <span><strong>Amber:</strong> Color is in the flag but in the wrong position</span>
               </div>
               <div className="flex items-center gap-3 p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div className="w-4 h-4 bg-gray-400 rounded"></div>

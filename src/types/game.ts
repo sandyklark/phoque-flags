@@ -10,6 +10,7 @@ export interface GameConfig {
   hardMode: boolean;
   theme: 'light' | 'dark' | 'auto';
   difficulty: 'easy' | 'medium' | 'hard';
+  animationsEnabled: boolean;
 }
 
 export interface GameStats {
@@ -109,6 +110,7 @@ export interface GameStore {
   reloadConfigFromFile: () => void;
   updateStats: (won: boolean, guessCount: number) => void;
   setTheme: (theme: 'light' | 'dark' | 'auto') => void;
+  toggleAnimations: () => void;
   
   // Daily game actions
   loadDailyGame: () => void;

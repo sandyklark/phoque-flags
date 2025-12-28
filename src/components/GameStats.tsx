@@ -60,7 +60,7 @@ export const GameStats = ({ stats, isOpen, onClose }: GameStatsProps) => {
                   <div className="w-4 text-right">{guess}</div>
                   <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded">
                     <div
-                      className="bg-green-500 text-white text-right pr-2 rounded text-sm font-medium h-6 flex items-center justify-end"
+                      className="bg-emerald-600 text-white text-right pr-2 rounded text-sm font-medium h-6 flex items-center justify-end"
                       style={{ width: `${Math.max(percentage, count > 0 ? 8 : 0)}%` }}
                     >
                       {count > 0 ? count : ''}

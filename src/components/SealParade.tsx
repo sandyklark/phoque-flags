@@ -1,7 +1,15 @@
 import flagsData from '../data/flags.json';
 import '../styles/SealParade.css';
 
-export const SealParade = () => {
+interface SealParadeProps {
+  enabled?: boolean;
+}
+
+export const SealParade = ({ enabled = true }: SealParadeProps) => {
+  // Don't render anything if animations are disabled
+  if (!enabled) {
+    return null;
+  }
   // Extract all flag emojis from the data
   const flagEmojis = flagsData.map(flag => flag.flagEmoji);
   

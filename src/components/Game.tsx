@@ -29,6 +29,7 @@ export const Game = () => {
     hintState,
     closeHintModal,
     checkForNewDay,
+    toggleAnimations,
   } = useGameStore();
 
   const [showModal, setShowModal] = useState(false);
@@ -126,56 +127,108 @@ export const Game = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 shadow-sm">
-        <div className="max-w-4xl mx-auto flex justify-between items-center flex-wrap gap-2">
-          <div className="flex gap-1 sm:gap-2">
-            <button
-              onClick={() => setShowStats(true)}
-              className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title="View game statistics"
-              aria-label="View game statistics"
-            >
-              📊 Stats
-            </button>
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-3 shadow-sm">
+        <div className="max-w-4xl mx-auto">
+          {/* Mobile: Compact layout, Desktop: Row layout */}
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             
-            <button
-              onClick={() => setShowHowToPlay(true)}
-              className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title="How to play"
-              aria-label="How to play instructions"
-            >
-              ❓ Help
-            </button>
-          </div>
+            {/* Mobile: Title and buttons in compact layout */}
+            <div className="flex items-center justify-between sm:hidden">
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setShowStats(true)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
+                  title="View game statistics"
+                  aria-label="View game statistics"
+                >
+                  📊
+                </button>
+                <button
+                  onClick={() => setShowHowToPlay(true)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
+                  title="How to play"
+                  aria-label="How to play instructions"
+                >
+                  ❓
+                </button>
+              </div>
+              
+              <h1 className="text-lg font-bold text-blue-600 dark:text-blue-400 text-center flex-1 mx-2">
+                Where the Phoque? {isDailyMode ? `#${puzzleNumber}` : ''}
+              </h1>
+              
+              <div className="flex gap-1">
+                <button
+                  onClick={handleNewGame}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
+                  title={isDailyMode ? "Start practice mode" : "New practice game"}
+                  aria-label={isDailyMode ? "Start practice mode with random flag" : "Start new practice game"}
+                >
+                  🎮
+                </button>
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
+                  title="Toggle dark/light theme"
+                  aria-label={`Switch to ${config.theme === 'dark' ? 'light' : 'dark'} theme`}
+                >
+                  {config.theme === 'dark' ? '☀️' : '🌙'}
+                </button>
+              </div>
+            </div>
 
-          <div className="flex flex-col items-center text-center flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">
-              Where the Phoque? {isDailyMode ? `#${puzzleNumber}` : ''}
-            </h1>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-              {isDailyMode ? 'Daily Flag Puzzle' : 'Practice Mode'} - Guess the flag by its colors and patterns
-            </p>
-          </div>
+            {/* Desktop layout - same as before */}
+            <div className="hidden sm:flex sm:justify-between sm:items-center sm:w-full">
+              {/* Left buttons */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowStats(true)}
+                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  title="View game statistics"
+                  aria-label="View game statistics"
+                >
+                  📊 Stats
+                </button>
+                <button
+                  onClick={() => setShowHowToPlay(true)}
+                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  title="How to play"
+                  aria-label="How to play instructions"
+                >
+                  ❓ Help
+                </button>
+              </div>
 
-          <div className="flex gap-1 sm:gap-2 flex-shrink-0">
-            <button
-              onClick={handleNewGame}
-              className="px-2 sm:px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
-              title={isDailyMode ? "Start practice mode" : "New practice game"}
-              aria-label={isDailyMode ? "Start practice mode with random flag" : "Start new practice game"}
-            >
-              <span className="hidden sm:inline">🎮 {isDailyMode ? 'Practice' : 'New Game'}</span>
-              <span className="sm:hidden">🎮</span>
-            </button>
+              {/* Center title */}
+              <div className="flex flex-col items-center text-center flex-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
+                  Where the Phoque? {isDailyMode ? `#${puzzleNumber}` : ''}
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  {isDailyMode ? 'Daily Flag Puzzle' : 'Practice Mode'} - Guess the flag by its colors and patterns
+                </p>
+              </div>
 
-            <button
-              onClick={toggleTheme}
-              className="px-2 sm:px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title="Toggle dark/light theme"
-              aria-label={`Switch to ${config.theme === 'dark' ? 'light' : 'dark'} theme`}
-            >
-              {config.theme === 'dark' ? '☀️' : '🌙'}
-            </button>
+              {/* Right buttons */}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleNewGame}
+                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
+                  title={isDailyMode ? "Start practice mode" : "New practice game"}
+                  aria-label={isDailyMode ? "Start practice mode with random flag" : "Start new practice game"}
+                >
+                  🎮 {isDailyMode ? 'Practice' : 'New Game'}
+                </button>
+                <button
+                  onClick={toggleTheme}
+                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  title="Toggle dark/light theme"
+                  aria-label={`Switch to ${config.theme === 'dark' ? 'light' : 'dark'} theme`}
+                >
+                  {config.theme === 'dark' ? '☀️' : '🌙'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -191,7 +244,7 @@ export const Game = () => {
         {/* Single Column Game Board with Integrated Input */}
         <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 relative">
           {/* Seal parade with flag trail */}
-          <SealParade />
+          <SealParade enabled={config.animationsEnabled !== false} />
           
           <div className="text-center mb-4">
             <h2 className="text-2xl font-bold mb-1">Where the Phoque?</h2>
@@ -255,25 +308,42 @@ export const Game = () => {
         onClose={() => setShowHowToPlay(false)}
       />
 
-      {/* Footer with tech badges */}
+      {/* Footer with tech badges and animation toggle */}
       <footer className="mt-8 pb-4">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="flex justify-center items-center gap-2 flex-wrap">
-            <img 
-              src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" 
-              alt="React"
-              className="h-5"
-            />
-            <img 
-              src="https://img.shields.io/badge/Zustand-FF6B35?style=for-the-badge&logo=react&logoColor=white" 
-              alt="Zustand"
-              className="h-5"
-            />
-            <img 
-              src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white" 
-              alt="Bun"
-              className="h-5"
-            />
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
+            {/* Tech badges */}
+            <div className="flex justify-center items-center gap-2 flex-wrap">
+              <img 
+                src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" 
+                alt="React"
+                className="h-5"
+              />
+              <img 
+                src="https://img.shields.io/badge/Zustand-FF6B35?style=for-the-badge&logo=react&logoColor=white" 
+                alt="Zustand"
+                className="h-5"
+              />
+              <img 
+                src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white" 
+                alt="Bun"
+                className="h-5"
+              />
+            </div>
+            
+            {/* Animation toggle */}
+            <button
+              onClick={toggleAnimations}
+              className={`px-3 py-1 text-xs rounded-full transition-colors border ${
+                config.animationsEnabled !== false
+                  ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-300 dark:border-blue-700'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600'
+              }`}
+              title={config.animationsEnabled !== false ? 'Disable animations (better performance)' : 'Enable animations'}
+              aria-label={config.animationsEnabled !== false ? 'Disable animations' : 'Enable animations'}
+            >
+              🦭 {config.animationsEnabled !== false ? 'ON' : 'OFF'}
+            </button>
           </div>
         </div>
       </footer>
