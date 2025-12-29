@@ -30,6 +30,11 @@
 
 body {
   transition: all 0.3s;
+  background-color: rgb(249 250 251);
+}
+
+.dark body {
+  background-color: rgb(17 24 39);
 }
 
 /* Attribute tile styles for flag guessing */
