@@ -8,6 +8,21 @@ import { HintModal } from './HintModal';
 import { HowToPlayModal } from './HowToPlayModal';
 import { SealParade } from './SealParade';
 import { isGuessComplete } from '../utils/flagHelpers';
+import { useTheme } from '../hooks/useTheme';
+import { 
+  handleGameResult, 
+  getNewGameButtonText, 
+  getNewGameAriaLabel, 
+  getNewGameTitle, 
+  getGameModeLabel 
+} from '../utils/gameHelpers';
+import { 
+  GAME_TITLE, 
+  BUTTON_CONFIGS, 
+  GAME_MODE_LABELS, 
+  TIMING, 
+  CSS_CLASSES 
+} from '../constants/game.constants';
 
 export const Game = () => {
   const {
@@ -25,12 +40,13 @@ export const Game = () => {
     clearAttribute,
     submitGuess,
     startTestMode,
-    setTheme,
     hintState,
     closeHintModal,
     checkForNewDay,
     toggleAnimations,
   } = useGameStore();
+
+  const { themeIcon, themeToggleLabel, toggleTheme } = useTheme();
 
   const [showModal, setShowModal] = useState(false);
   const [showStats, setShowStats] = useState(false);
@@ -67,48 +83,32 @@ export const Game = () => {
 
   const handleColorSelect = (position: 'primary' | 'secondary' | 'tertiary', color: any) => {
     const result = setColor(position, color);
-    if (!result.success && result.error) {
-      showNotification(result.error);
-    }
+    handleGameResult(result, showNotification, showSnarkMessage);
   };
 
   const handlePatternSelect = (pattern: any) => {
     const result = setPattern(pattern);
-    if (!result.success && result.error) {
-      showNotification(result.error);
-    }
+    handleGameResult(result, showNotification, showSnarkMessage);
   };
 
   const handleSubmitGuess = () => {
     const result = submitGuess();
-    if (!result.success && result.error) {
-      showNotification(result.error);
-    } else if (result.success && result.message) {
-      // Check if it's a success message (correct) or snark message (wrong)
-      if (result.message === 'Correct! You found the flag!') {
-        showNotification(result.message);
-      } else {
-        // It's a snark message for wrong guess
-        showSnarkMessage(result.message);
-      }
-    }
+    handleGameResult(result, showNotification, showSnarkMessage);
   };
 
   const handleClearAttribute = (attribute: 'primaryColor' | 'secondaryColor' | 'tertiaryColor' | 'pattern') => {
     const result = clearAttribute(attribute);
-    if (!result.success && result.error) {
-      showNotification(result.error);
-    }
+    handleGameResult(result, showNotification, showSnarkMessage);
   };
 
   const showNotification = (message: string) => {
     setNotification(message);
-    setTimeout(() => setNotification(''), 3000);
+    setTimeout(() => setNotification(''), TIMING.NOTIFICATION_DURATION);
   };
 
   const showSnarkMessage = (message: string) => {
     setSnarkMessage(message);
-    setTimeout(() => setSnarkMessage(''), 10000); // 10 seconds for snark
+    setTimeout(() => setSnarkMessage(''), TIMING.SNARK_MESSAGE_DURATION);
   };
 
   const handleNewGame = () => {
@@ -118,16 +118,11 @@ export const Game = () => {
 
   const isGameOver = gameState === 'won' || gameState === 'lost';
   const canSubmit = isGuessComplete(currentGuess);
-  
-  // Use the theme from config, but handle 'auto' by checking system preference
-  const isDarkModeActive = config.theme === 'dark' || 
-    (config.theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const themeIcon = isDarkModeActive ? '☀️' : '🌙';
-  const themeToggleLabel = `Switch to ${isDarkModeActive ? 'light' : 'dark'} theme`;
 
-  const toggleTheme = () => {
-    const newTheme = isDarkModeActive ? 'light' : 'dark';
-    setTheme(newTheme);
+  // Create CSS class helpers
+  const buttonClasses = {
+    mobile: `${CSS_CLASSES.buttonMobile} ${CSS_CLASSES.buttonHover} ${CSS_CLASSES.buttonBase}`,
+    desktop: `${CSS_CLASSES.buttonDesktop} ${CSS_CLASSES.buttonHover} ${CSS_CLASSES.buttonBase}`,
   };
 
   return (
@@ -143,39 +138,39 @@ export const Game = () => {
               <div className="flex gap-1">
                 <button
                   onClick={() => setShowStats(true)}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
-                  title="View game statistics"
-                  aria-label="View game statistics"
+                  className={buttonClasses.mobile}
+                  title={BUTTON_CONFIGS.stats.title}
+                  aria-label={BUTTON_CONFIGS.stats.ariaLabel}
                 >
-                  📊
+                  {BUTTON_CONFIGS.stats.icon}
                 </button>
                 <button
                   onClick={() => setShowHowToPlay(true)}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
-                  title="How to play"
-                  aria-label="How to play instructions"
+                  className={buttonClasses.mobile}
+                  title={BUTTON_CONFIGS.help.title}
+                  aria-label={BUTTON_CONFIGS.help.ariaLabel}
                 >
-                  ❓
+                  {BUTTON_CONFIGS.help.icon}
                 </button>
               </div>
 
               <h1 className="text-lg font-bold text-gray-700 dark:text-gray-200 text-center flex-1 mx-2">
-                Where the Phoque? {isDailyMode ? `#${puzzleNumber}` : ''}
+                {GAME_TITLE} {isDailyMode ? `#${puzzleNumber}` : ''}
               </h1>
 
               <div className="flex gap-1">
                 <button
                   onClick={handleNewGame}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
-                  title={isDailyMode ? "Start practice mode" : "New practice game"}
-                  aria-label={isDailyMode ? "Start practice mode with random flag" : "Start new practice game"}
+                  className={buttonClasses.mobile}
+                  title={getNewGameTitle(isDailyMode)}
+                  aria-label={getNewGameAriaLabel(isDailyMode)}
                 >
-                  🎮
+                  {BUTTON_CONFIGS.newGame.icon}
                 </button>
                 <button
                   onClick={toggleTheme}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
-                  title="Toggle dark/light theme"
+                  className={buttonClasses.mobile}
+                  title={BUTTON_CONFIGS.theme.title}
                   aria-label={themeToggleLabel}
                 >
                   {themeIcon}
@@ -189,29 +184,29 @@ export const Game = () => {
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowStats(true)}
-                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                  title="View game statistics"
-                  aria-label="View game statistics"
+                  className={buttonClasses.desktop}
+                  title={BUTTON_CONFIGS.stats.title}
+                  aria-label={BUTTON_CONFIGS.stats.ariaLabel}
                 >
-                  📊 Stats
+                  {BUTTON_CONFIGS.stats.icon} {BUTTON_CONFIGS.stats.label}
                 </button>
                 <button
                   onClick={() => setShowHowToPlay(true)}
-                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                  title="How to play"
-                  aria-label="How to play instructions"
+                  className={buttonClasses.desktop}
+                  title={BUTTON_CONFIGS.help.title}
+                  aria-label={BUTTON_CONFIGS.help.ariaLabel}
                 >
-                  ❓ Help
+                  {BUTTON_CONFIGS.help.icon} {BUTTON_CONFIGS.help.label}
                 </button>
               </div>
 
               {/* Center title */}
               <div className="flex flex-col items-center text-center flex-1">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-700 dark:text-gray-200">
-                  Where the Phoque? {isDailyMode ? `#${puzzleNumber}` : ''}
+                  {GAME_TITLE} {isDailyMode ? `#${puzzleNumber}` : ''}
                 </h1>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                  {isDailyMode ? 'Daily Flag Puzzle' : 'Practice Mode'} - Guess the flag by its colors and patterns
+                  {getGameModeLabel(isDailyMode)} - {GAME_MODE_LABELS.subtitle}
                 </p>
               </div>
 
@@ -219,16 +214,16 @@ export const Game = () => {
               <div className="flex gap-2">
                 <button
                   onClick={handleNewGame}
-                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
-                  title={isDailyMode ? "Start practice mode" : "New practice game"}
-                  aria-label={isDailyMode ? "Start practice mode with random flag" : "Start new practice game"}
+                  className={`${buttonClasses.desktop} text-sm`}
+                  title={getNewGameTitle(isDailyMode)}
+                  aria-label={getNewGameAriaLabel(isDailyMode)}
                 >
-                  🎮 {isDailyMode ? 'Practice' : 'New Game'}
+                  {BUTTON_CONFIGS.newGame.icon} {getNewGameButtonText(isDailyMode)}
                 </button>
                 <button
                   onClick={toggleTheme}
-                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                  title="Toggle dark/light theme"
+                  className={buttonClasses.desktop}
+                  title={BUTTON_CONFIGS.theme.title}
                   aria-label={themeToggleLabel}
                 >
                   {themeIcon}
@@ -253,7 +248,7 @@ export const Game = () => {
           <SealParade enabled={config.animationsEnabled} />
 
           <div className="text-center mb-4">
-            <h2 className="text-2xl font-bold mb-1">Where the Phoque?</h2>
+            <h2 className="text-2xl font-bold mb-1">{GAME_TITLE}</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">Guess the flag</p>
           </div>
 
