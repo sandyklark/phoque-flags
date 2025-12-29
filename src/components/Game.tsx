@@ -116,13 +116,19 @@ export const Game = () => {
     setShowModal(false);
   };
 
-  const toggleTheme = () => {
-    const newTheme = config.theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-  };
-
   const isGameOver = gameState === 'won' || gameState === 'lost';
   const canSubmit = isGuessComplete(currentGuess);
+  
+  // Use the theme from config, but handle 'auto' by checking system preference
+  const isDarkModeActive = config.theme === 'dark' || 
+    (config.theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const themeIcon = isDarkModeActive ? '☀️' : '🌙';
+  const themeToggleLabel = `Switch to ${isDarkModeActive ? 'light' : 'dark'} theme`;
+
+  const toggleTheme = () => {
+    const newTheme = isDarkModeActive ? 'light' : 'dark';
+    setTheme(newTheme);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
@@ -131,7 +137,7 @@ export const Game = () => {
         <div className="max-w-4xl mx-auto">
           {/* Mobile: Compact layout, Desktop: Row layout */}
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-            
+
             {/* Mobile: Title and buttons in compact layout */}
             <div className="flex items-center justify-between sm:hidden">
               <div className="flex gap-1">
@@ -152,11 +158,11 @@ export const Game = () => {
                   ❓
                 </button>
               </div>
-              
-              <h1 className="text-lg font-bold text-blue-600 dark:text-blue-400 text-center flex-1 mx-2">
+
+              <h1 className="text-lg font-bold text-gray-700 dark:text-gray-200 text-center flex-1 mx-2">
                 Where the Phoque? {isDailyMode ? `#${puzzleNumber}` : ''}
               </h1>
-              
+
               <div className="flex gap-1">
                 <button
                   onClick={handleNewGame}
@@ -170,9 +176,9 @@ export const Game = () => {
                   onClick={toggleTheme}
                   className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
                   title="Toggle dark/light theme"
-                  aria-label={`Switch to ${config.theme === 'dark' ? 'light' : 'dark'} theme`}
+                  aria-label={themeToggleLabel}
                 >
-                  {config.theme === 'dark' ? '☀️' : '🌙'}
+                  {themeIcon}
                 </button>
               </div>
             </div>
@@ -201,7 +207,7 @@ export const Game = () => {
 
               {/* Center title */}
               <div className="flex flex-col items-center text-center flex-1">
-                <h1 className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-700 dark:text-gray-200">
                   Where the Phoque? {isDailyMode ? `#${puzzleNumber}` : ''}
                 </h1>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
@@ -223,9 +229,9 @@ export const Game = () => {
                   onClick={toggleTheme}
                   className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                   title="Toggle dark/light theme"
-                  aria-label={`Switch to ${config.theme === 'dark' ? 'light' : 'dark'} theme`}
+                  aria-label={themeToggleLabel}
                 >
-                  {config.theme === 'dark' ? '☀️' : '🌙'}
+                  {themeIcon}
                 </button>
               </div>
             </div>
@@ -244,13 +250,13 @@ export const Game = () => {
         {/* Single Column Game Board with Integrated Input */}
         <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 relative">
           {/* Seal parade with flag trail */}
-          <SealParade enabled={config.animationsEnabled !== false} />
-          
+          <SealParade enabled={config.animationsEnabled} />
+
           <div className="text-center mb-4">
             <h2 className="text-2xl font-bold mb-1">Where the Phoque?</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">Guess the flag</p>
           </div>
-          
+
           <GameBoard
             guesses={guesses}
             currentGuess={currentGuess}
@@ -262,12 +268,12 @@ export const Game = () => {
             canSubmit={canSubmit}
             disabled={isGameOver}
           />
-          
+
           {/* Manual Hint Button */}
           <div className="flex justify-center mt-4">
             <HintButton />
           </div>
-          
+
           {/* Snark Message */}
           {snarkMessage && (
             <div className="mt-4 text-center animate-fade-in">
@@ -314,35 +320,35 @@ export const Game = () => {
           <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
             {/* Tech badges */}
             <div className="flex justify-center items-center gap-2 flex-wrap">
-              <img 
-                src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" 
+              <img
+                src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black"
                 alt="React"
                 className="h-5"
               />
-              <img 
-                src="https://img.shields.io/badge/Zustand-FF6B35?style=for-the-badge&logo=react&logoColor=white" 
+              <img
+                src="https://img.shields.io/badge/Zustand-FF6B35?style=for-the-badge&logo=react&logoColor=white"
                 alt="Zustand"
                 className="h-5"
               />
-              <img 
-                src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white" 
+              <img
+                src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white"
                 alt="Bun"
                 className="h-5"
               />
             </div>
-            
+
             {/* Animation toggle */}
             <button
               onClick={toggleAnimations}
               className={`px-3 py-1 text-xs rounded-full transition-colors border ${
-                config.animationsEnabled !== false
+                config.animationsEnabled
                   ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-300 dark:border-blue-700'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600'
               }`}
-              title={config.animationsEnabled !== false ? 'Disable animations (better performance)' : 'Enable animations'}
-              aria-label={config.animationsEnabled !== false ? 'Disable animations' : 'Enable animations'}
+              title={config.animationsEnabled ? 'Disable animations (better performance)' : 'Enable animations'}
+              aria-label={config.animationsEnabled ? 'Disable animations' : 'Enable animations'}
             >
-              🦭 {config.animationsEnabled !== false ? 'ON' : 'OFF'}
+              🦭 {config.animationsEnabled ? 'ON' : 'OFF'}
             </button>
           </div>
         </div>

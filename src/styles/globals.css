@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --color-correct: #6aaa64;
   --color-present: #c9b458;
@@ -27,15 +29,7 @@
 }
 
 body {
-  background: white;
-  color: rgb(17 24 39);
   transition: all 0.3s;
-}
-
-:root:has(.dark) body,
-.dark body {
-  background: rgb(17 24 39);
-  color: white;
 }
 
 /* Attribute tile styles for flag guessing */
